@@ -11,7 +11,7 @@ class Snapshot {
 
     getSnapshots(req, res) {
         try {
-            console.log(req.body.snapshot.children)
+            console.log(req.body)
             res.send({
                 msg: 'snapshots!'
             })
@@ -22,7 +22,7 @@ class Snapshot {
 
     createSnapshot(req, res) {
         try {
-            console.log(req.body)
+            console.log(req.body.snapshot.children)
             res.send({
                 msg: 'snapshots!'
             })
