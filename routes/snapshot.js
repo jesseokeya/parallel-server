@@ -22,7 +22,7 @@ class Snapshot {
 
     createSnapshot(req, res) {
         try {
-            console.log(req.body.snapshot.children)
+            console.log(JSON.stringify(req.body.snapshot, null, 2))
             res.send({
                 msg: 'snapshots!'
             })
