@@ -1,3 +1,5 @@
+const { depthOfTree, identicalTrees } = require('../util')
+
 class Snapshot {
     constructor(options = {}) {
         this.options = options
@@ -22,7 +24,9 @@ class Snapshot {
 
     createSnapshot(req, res) {
         try {
-            console.log(JSON.stringify(req.body.snapshot, null, 2))
+            const ctx = req.body.snapshot
+            console.log(depthOfTree(ctx))
+            console.log(identicalTrees(ctx, ctx))
             res.send({
                 msg: 'snapshots!'
             })
