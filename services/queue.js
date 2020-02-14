@@ -70,6 +70,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async registerWorker() {
         try {
             return new Worker(this.name, async job => await this.process(job))
@@ -78,6 +86,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async pause() {
         try {
             return this.queue.pause().then(context => context)
@@ -86,6 +102,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async resume() {
         try {
             return this.queue.resume().then(context => context)
@@ -94,6 +118,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async activeJob() {
         try {
             return this.queue.getActive().then(context => context)
@@ -102,6 +134,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async empty() {
         try {
             return this.connection.flushall().then(context => context)
@@ -110,6 +150,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async keys() {
         try {
             return this.connection.keys('*').then(context => context)
@@ -118,6 +166,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     completedCount() {
         try {
             return this.queue.getCompletedCount().then(context => context)
@@ -126,6 +182,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     failedCount() {
         try {
             return this.queue.getFailedCount().then(context => context)
@@ -134,6 +198,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     delayedCount() {
         try {
             return this.queue.getDelayedCount().then(context => context)
@@ -142,6 +214,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     activeCount() {
         try {
             return this.queue.getActiveCount().then(context => context)
@@ -150,6 +230,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async job(id) {
         try {
             return this.connection.hgetall(id).then(context => context)
@@ -158,6 +246,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async completedJobs() {
         try {
             const results = []
@@ -171,6 +267,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     getWaitingCount() {
         try {
 
@@ -179,6 +283,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     async registerEvents() {
         try {
             const queueEvents = new QueueEvents(this.name);
@@ -195,6 +307,14 @@ class QueueService {
         }
     }
 
+    /**
+     * @constructor QueueService - manages jobs to be scheduled in the future
+     * @param {Snapshot} job - job data to be processed
+     * @returns {Promise<Object>} response for resolved bob
+     * @example
+     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const process = queueService.process(job)
+     */
     _handleEvents(type, ctx) {
         try {
             switch (type) {
