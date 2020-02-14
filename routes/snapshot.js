@@ -1,9 +1,18 @@
+const {
+    depthOfTree,
+    identicalTrees
+} = require('../util')
+
 class Snapshot {
     constructor(options = {}) {
         this.options = options
         this.router = options.Router
         this.queueService = new options.QueueService({
-            name: 'Parallel'
+            name: 'Parallel',
+            util: {
+                depthOfTree,
+                identicalTrees
+            }
         })
         this.queueService.registerWorker()
         this.queueService.registerQueueEvents()
@@ -32,13 +41,15 @@ class Snapshot {
                 page_title,
                 snapshot,
                 current_url,
-                browser
+                browser,
+                priority
             } = req.body
             const context = {
                 page_title,
                 snapshot,
                 current_url,
-                browser
+                browser,
+                priority
             }
             await this.queueService.addJob(url, context)
             res.send({

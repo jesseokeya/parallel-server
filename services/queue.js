@@ -13,11 +13,14 @@ class QueueService {
         this.queue = new Queue(options.name, {
             connection: this.connection
         });
+        this.util = options.util
     }
 
     async addJob(name, context) {
         try {
-            return this.queue.add(name, context);
+            return this.queue.add(name, context, {
+                priority: context.priority || 10
+            });
         } catch (err) {
             throw err
         }
@@ -25,9 +28,15 @@ class QueueService {
 
     async processJobs(job) {
         try {
-            console.log(job)
+            const {
+                snapshot
+            } = job.data
+            return JSON.stringify({
+                depth: this.util.depthOfTree(snapshot),
+                isIdentical: this.util.identicalTrees(snapshot, snapshot)
+            })
         } catch (err) {
-            throw err
+
         }
     }
 
@@ -66,33 +75,56 @@ class QueueService {
 
     async registerQueueEvents() {
         try {
-            const queueEvents = new QueueEvents();
-            // queueEvents.on('waiting', ({
-            //     jobId
-            // }) => {
-            //     console.log(`A job with ID ${jobId} is waiting`);
-            // });
+            const queueEvents = new QueueEvents(this.name);
+            queueEvents.on('waiting', ({
+                jobId
+            }) => {
+                console.log(`A job with ID ${jobId} is waiting`);
+            });
 
-            // queueEvents.on('active', ({
-            //     jobId,
-            //     prev
-            // }) => {
-            //     console.log(`Job ${jobId} is now active; previous status was ${prev}`);
-            // });
+            queueEvents.on('active', ({
+                jobId,
+                prev
+            }) => {
+                console.log(`Job ${jobId} is now active; previous status was ${prev}`);
+            });
 
-            // queueEvents.on('completed', ({
-            //     jobId,
-            //     returnvalue
-            // }) => {
-            //     console.log(`${jobId} has completed and returned ${returnvalue}`);
-            // });
+            queueEvents.on('completed', ({
+                jobId,
+                returnvalue
+            }) => {
+                console.log(`${jobId} has completed and returned ${returnvalue}`);
+            });
 
-            // queueEvents.on('failed', ({
-            //     jobId,
-            //     failedReason
-            // }) => {
-            //     console.log(`${jobId} has failed with reason ${failedReason}`);
-            // });
+            queueEvents.on('failed', ({
+                jobId,
+                failedReason
+            }) => {
+                console.log(`${jobId} has failed with reason ${failedReason}`);
+            });
+
+            queueEvents.on('progress', ({
+                jobId,
+                data
+            }, timestamp) => {
+                console.log(`${jobId} reported progress ${data} at ${timestamp}`);
+            });
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async getJobKeys() {
+        try {
+            return this.connection.keys('*').then(keys => keys)
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async getJob(key) {
+        try {
+            return this.connection.get(key).then(context => context)
         } catch (err) {
             throw err
         }
