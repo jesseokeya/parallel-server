@@ -1,6 +1,7 @@
 const {
     depthOfTree,
-    identicalTrees
+    identicalTrees,
+    compareTrees
 } = require('../util')
 
 class Snapshot {
@@ -11,7 +12,8 @@ class Snapshot {
             name: 'Parallel',
             util: {
                 depthOfTree,
-                identicalTrees
+                identicalTrees,
+                compareTrees
             }
         })
         this.queueService.registerWorker()

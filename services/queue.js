@@ -18,6 +18,10 @@ class QueueService {
         this.name = options.name
         this.connection = new IORedis();
         this.queue = new Queue(options.name, {
+            limiter: options.limiter || {
+                max: 2,
+                duration: 5000
+            },
             connection: this.connection
         });
         this.util = options.util
@@ -61,9 +65,11 @@ class QueueService {
             const {
                 snapshot
             } = job.data
+            
             return JSON.stringify({
                 depth: this.util.depthOfTree(snapshot),
-                isIdentical: this.util.identicalTrees(snapshot, snapshot)
+                isIdentical: this.util.identicalTrees(snapshot, snapshot),
+                similarityScore: compareTrees(snapshot, snapshot)
             })
         } catch (err) {
 
@@ -320,16 +326,22 @@ class QueueService {
             switch (type) {
                 case 'waiting':
                     console.log(`A job with ID ${ctx.jobId} is waiting`);
+                    break
                 case 'active':
                     console.log(`Job ${ctx.jobId} is now active; previous status was ${ctx.prev}`);
+                    break
                 case 'completed':
+                    console.log(ctx)
                     console.log(`${ctx.jobId} has completed and returned ${ctx.returnvalue}`);
+                    break
                 case 'failed':
                     console.log(`${ctx.jobId} has failed with reason ${ctx.failedReason}`);
+                    break
                 case 'progess':
                     console.log(`${ctx.jobId} reported progress ${ctx.data} at ${ctx.timestamp}`);
+                    break
                 default:
-                    console.log(`${type} -> ${context}`)
+                    console.log(`${type} -> ${ctx}`)
             }
         } catch (err) {
             throw err

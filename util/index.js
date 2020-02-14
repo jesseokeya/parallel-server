@@ -1,4 +1,4 @@
-const { depthOfTree, identicalTrees } = require('./tree')
+const { depthOfTree, identicalTrees, compareTrees } = require('./tree')
 
 const initializeRoutes = ({
     app,
@@ -14,5 +14,6 @@ const initializeRoutes = ({
 module.exports = {
     initializeRoutes,
     depthOfTree,
-    identicalTrees
+    identicalTrees,
+    compareTrees
 }
