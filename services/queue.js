@@ -18,13 +18,10 @@ class QueueService {
         this.name = options.name
         this.connection = new IORedis();
         this.queue = new Queue(options.name, {
-            limiter: options.limiter || {
-                max: 2,
-                duration: 5000
-            },
             connection: this.connection
         });
         this.util = options.util
+        // this.empty()
     }
 
     /**
@@ -62,17 +59,32 @@ class QueueService {
      */
     async process(job) {
         try {
+            const start = new Date()
+            const hrstart = process.hrtime()
             const {
+                current_url,
                 snapshot
             } = job.data
-            
+            const jobs = await this.completedJobs()
+            const ctx = JSON.parse(jobs[1].data)
+            console.log(current_url, ctx.current_url)
+
+            const depth = this.util.depthOfTree(snapshot)
+            const isIdentical = this.util.identicalTrees(ctx.snapshot, snapshot)
+            const similarityScore = compareTrees(snapshot, ctx.snapshot)
+
+            const end = new Date() - start,
+                hrend = process.hrtime(hrstart)
+
+            console.info('Execution time: %dms', end)
+            console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
             return JSON.stringify({
-                depth: this.util.depthOfTree(snapshot),
-                isIdentical: this.util.identicalTrees(snapshot, snapshot),
-                similarityScore: compareTrees(snapshot, snapshot)
+                depth,
+                isIdentical,
+                similarityScore
             })
         } catch (err) {
-
+            throw err
         }
     }
 
