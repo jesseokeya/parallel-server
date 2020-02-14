@@ -14,7 +14,6 @@ class QueueService {
             connection: this.connection
         });
         this.util = options.util
-        this.getJob('bull:Parallel:completed').then(res => console.log(res))
     }
 
     async addJob(name, context) {
@@ -43,16 +42,7 @@ class QueueService {
 
     async registerWorker() {
         try {
-            this.worker = new Worker(this.name, async job => await this.processJobs(job))
-            return this.getWorker()
-        } catch (err) {
-            throw err
-        }
-    }
-
-    async getWorker() {
-        try {
-            return this.worker
+            return new Worker(this.name, async job => await this.processJobs(job))
         } catch (err) {
             throw err
         }
