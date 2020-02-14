@@ -1,9 +1,12 @@
-const { depthOfTree, identicalTrees } = require('../util')
-
 class Snapshot {
     constructor(options = {}) {
         this.options = options
         this.router = options.Router
+        this.queueService = new options.QueueService({
+            name: 'Parallel'
+        })
+        this.queueService.registerWorker()
+        this.queueService.registerQueueEvents()
     }
 
     initialize() {
@@ -22,13 +25,25 @@ class Snapshot {
         }
     }
 
-    createSnapshot(req, res) {
+    async createSnapshot(req, res) {
         try {
-            const ctx = req.body.snapshot
-            console.log(depthOfTree(ctx))
-            console.log(identicalTrees(ctx, ctx))
+            const {
+                url,
+                page_title,
+                snapshot,
+                current_url,
+                browser
+            } = req.body
+            const context = {
+                page_title,
+                snapshot,
+                current_url,
+                browser
+            }
+            await this.queueService.addJob(url, context)
             res.send({
-                msg: 'snapshots!'
+                status: 200,
+                msg: `successfully added ${url} to job queue`
             })
         } catch (err) {
             throw err

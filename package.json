@@ -29,8 +29,10 @@
   "homepage": "https://github.com/jesseokeya/parallel-server#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "bullmq": "^1.6.7",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "ioredis": "^4.14.1",
     "morgan": "^1.9.1"
   }
 }

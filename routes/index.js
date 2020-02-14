@@ -5,7 +5,7 @@ const SnapshotRoute = require('./snapshot')
 const NotificationRoute = require('./notification')
 
 /* Required Services */
-const { CacheService }  = require('../services')
+const { CacheService, QueueService }  = require('../services')
 
 /* Required Daos */
 
@@ -15,7 +15,7 @@ const context = {
 }
 
 const routes = [
-    new SnapshotRoute(context),
+    new SnapshotRoute({ ...context, QueueService }),
     new NotificationRoute(context)
 ]
 

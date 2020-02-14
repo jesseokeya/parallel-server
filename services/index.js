@@ -1,3 +1,4 @@
 module.exports = {
-    CaheService: require('./cache')
+    CaheService: require('./cache'),
+    QueueService: require('./queue')
 }
