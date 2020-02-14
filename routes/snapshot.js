@@ -16,8 +16,6 @@ class Snapshot {
                 compareTrees
             }
         })
-        this.queueService.registerWorker()
-        this.queueService.registerEvents()
     }
 
     initialize() {
@@ -53,7 +51,7 @@ class Snapshot {
                 browser,
                 priority
             }
-            await this.queueService.add(url, context)
+            this.queueService.add(url, context)
             res.send({
                 status: 200,
                 msg: `successfully added ${url} to job queue`

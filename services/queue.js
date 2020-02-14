@@ -1,5 +1,6 @@
 const {
     Queue,
+    QueueScheduler,
     Worker,
     QueueEvents
 } = require('bullmq');
@@ -16,12 +17,15 @@ class QueueService {
     constructor(options = {}) {
         this.options = options
         this.name = options.name
+        this.util = options.util
         this.connection = new IORedis();
         this.queue = new Queue(options.name, {
             connection: this.connection
         });
-        this.util = options.util
-        // this.empty()
+        this.queue.waitUntilReady()
+        this.registerScheduler()
+        this.registerWorker()
+        this.registerEvents()
     }
 
     /**
@@ -41,8 +45,10 @@ class QueueService {
      */
     async add(name, context) {
         try {
+            const timings = [1000, 20000, 60000]
             return this.queue.add(name, context, {
-                priority: context.priority || 10
+                priority: context.priority || 10,
+                delay: timings[Math.floor(Math.random() * timings.length)]
             });
         } catch (err) {
             throw err
@@ -59,30 +65,50 @@ class QueueService {
      */
     async process(job) {
         try {
-            const start = new Date()
-            const hrstart = process.hrtime()
-            const {
-                current_url,
-                snapshot
-            } = job.data
             const jobs = await this.completedJobs()
-            const ctx = JSON.parse(jobs[1].data)
-            console.log(current_url, ctx.current_url)
+            if (jobs.length > 1) {
+                const start = new Date()
+                const hrstart = process.hrtime()
+                const {
+                    current_url,
+                    snapshot
+                } = job.data
+                const ctx = JSON.parse(jobs[1].data)
+                console.log(current_url, ctx.current_url)
 
-            const depth = this.util.depthOfTree(snapshot)
-            const isIdentical = this.util.identicalTrees(ctx.snapshot, snapshot)
-            const similarityScore = compareTrees(snapshot, ctx.snapshot)
+                const depth = this.util.depthOfTree(snapshot)
+                const isIdentical = this.util.identicalTrees(ctx.snapshot, snapshot)
+                const similarityScore = compareTrees(snapshot, ctx.snapshot)
 
-            const end = new Date() - start,
-                hrend = process.hrtime(hrstart)
+                const end = new Date() - start,
+                    hrend = process.hrtime(hrstart)
 
-            console.info('Execution time: %dms', end)
-            console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
-            return JSON.stringify({
-                depth,
-                isIdentical,
-                similarityScore
-            })
+                console.info('Execution time: %dms', end)
+                console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+                return JSON.stringify({
+                    depth,
+                    isIdentical,
+                    similarityScore
+                })
+            } else {
+                const start = new Date()
+                const hrstart = process.hrtime()
+                const {
+                    snapshot
+                } = job.data
+                const depth = this.util.depthOfTree(snapshot)
+                const isIdentical = this.util.identicalTrees(snapshot, snapshot)
+                const similarityScore = compareTrees(snapshot, snapshot)
+                const end = new Date() - start,
+                    hrend = process.hrtime(hrstart)
+                console.info('Execution time: %dms', end)
+                console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+                return JSON.stringify({
+                    depth,
+                    isIdentical,
+                    similarityScore
+                })
+            }
         } catch (err) {
             throw err
         }
@@ -311,7 +337,9 @@ class QueueService {
      */
     async registerEvents() {
         try {
-            const queueEvents = new QueueEvents(this.name);
+            const queueEvents = new QueueEvents(this.name)
+            await queueEvents.waitUntilReady();
+
             queueEvents.on('waiting', ctx => this._handleEvents('waiting', ctx));
             queueEvents.on('active', ctx => this._handleEvents('active', ctx));
             queueEvents.on('completed', ctx => this._handleEvents('completed', ctx));
@@ -320,6 +348,16 @@ class QueueService {
                 ...ctx,
                 timestamp
             }))
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async registerScheduler() {
+        try {
+            const queueScheduler = new QueueScheduler(this.name);
+            await queueScheduler.waitUntilReady();
+            return queueScheduler
         } catch (err) {
             throw err
         }
