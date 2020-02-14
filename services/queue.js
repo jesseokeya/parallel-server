@@ -14,6 +14,7 @@ class QueueService {
             connection: this.connection
         });
         this.util = options.util
+        this.getJob('bull:Parallel:completed').then(res => console.log(res))
     }
 
     async addJob(name, context) {
