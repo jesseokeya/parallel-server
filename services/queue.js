@@ -48,7 +48,7 @@ class QueueService {
             const timings = [1000, 20000, 60000]
             return this.queue.add(name, context, {
                 priority: context.priority || 10,
-                delay: timings[Math.floor(Math.random() * timings.length)]
+                // delay: timings[Math.floor(Math.random() * timings.length)]
             });
         } catch (err) {
             throw err
@@ -78,7 +78,7 @@ class QueueService {
 
                 const depth = this.util.depthOfTree(snapshot)
                 const isIdentical = this.util.identicalTrees(ctx.snapshot, snapshot)
-                const similarityScore = compareTrees(snapshot, ctx.snapshot)
+                const similarityScore = compareTrees(snapshot, ctx.snapshot, isIdentical)
 
                 const end = new Date() - start,
                     hrend = process.hrtime(hrstart)
@@ -98,7 +98,7 @@ class QueueService {
                 } = job.data
                 const depth = this.util.depthOfTree(snapshot)
                 const isIdentical = this.util.identicalTrees(snapshot, snapshot)
-                const similarityScore = compareTrees(snapshot, snapshot)
+                const similarityScore = compareTrees(snapshot, snapshot, isIdentical)
                 const end = new Date() - start,
                     hrend = process.hrtime(hrstart)
                 console.info('Execution time: %dms', end)

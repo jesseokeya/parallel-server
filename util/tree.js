@@ -24,9 +24,12 @@ identicalTrees = (firstNode, secondNode) => {
     return result
 }
 
-const generateSimilarityScore = (totalMatches, numberOfNodes) => {
+const generateSimilarityScore = (totalMatches, numberOfNodes, isIdentical) => {
     if (numberOfNodes <= 0) return 0
-    return ((totalMatches * 2) / numberOfNodes) * 100
+    if (totalMatches * 2 > numberOfNodes) return Math.floor(((numberOfNodes) / totalMatches * 2) * 100)
+    const result = Math.floor(((totalMatches * 2) / numberOfNodes) * 100)
+    if (result > 100 && isIdentical || isIdentical) return 100
+    return result
 }
 
 const countNode = (root) => {
@@ -46,10 +49,11 @@ const countNodes = (firstNode, secondNode) => {
     return countNode(firstNode) + countNode(secondNode)
 }
 
+const isEmpty = (obj) => Object.entries(obj).length === 0 && obj.constructor === Object
+
 const hasSimilarAttributes = (first, second) => {
     let result = true
     for (const attr in first) {
-        result = result && second[attr] && second[attr] === first[attr]
     }
     return result
 }
@@ -65,7 +69,7 @@ const countSimilarNodes = (comparator, secondNode) => {
     return counter
 }
 
-compareTrees = (firstNode, secondNode) => {
+compareTrees = (firstNode, secondNode, isIdentical) => {
     let totalMatches = 0
     const arr = [firstNode]
     while (arr.length > 0) {
@@ -73,7 +77,7 @@ compareTrees = (firstNode, secondNode) => {
         if (node && node.children) arr.push(...node.children)
         totalMatches += countSimilarNodes(node, secondNode)
     }
-    return generateSimilarityScore(totalMatches, countNodes(firstNode, secondNode))
+    return generateSimilarityScore(totalMatches, countNodes(firstNode, secondNode), isIdentical)
 }
 
 module.exports = {
