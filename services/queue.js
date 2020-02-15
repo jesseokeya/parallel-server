@@ -1,10 +1,11 @@
+const IORedis = require('ioredis');
+const psl = require('psl');
 const {
     Queue,
     QueueScheduler,
     Worker,
     QueueEvents
 } = require('bullmq');
-const IORedis = require('ioredis');
 
 /**
  * @constructor QueueService - manages jobs to be scheduled in the future
@@ -74,16 +75,19 @@ class QueueService {
             const document = await this.util.getDocument(url)
             const title = document('title').text()
             const body =  document('body')
-            const replicateDocument = this.util.inOrderTraversal(body)
-            console.log(replicateDocument)
-            const result = {
-                title
+            const snapshot = this.util.inOrderTraversal(body)
+            const context = {
+                title,
+                snapshot: JSON.stringify(snapshot),
+                url,
+                domain: psl.get(this.util.extractHostname(url))
             }
+            console.log(context)
             const end = new Date() - start,
                 hrend = process.hrtime(hrstart)
             console.info('Execution time: %dms', end)
             console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
-            return JSON.stringify(result)
+            return 'test'
         } catch (err) {
             throw err
         }

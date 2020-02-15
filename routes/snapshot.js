@@ -5,13 +5,17 @@ const {
     identicalTrees,
     compareTrees,
     getDocument,
-    inOrderTraversal
+    inOrderTraversal,
+    extractHostname
 } = require('../util')
 
 class Snapshot {
     constructor(options = {}) {
         this.options = options
         this.router = options.Router
+        this.snapshotService = new options.SnapshotService({
+            snapshotDao: new options.SnapshotDao()
+        })
         this.queueService = new options.QueueService({
             name: process.env.NAME,
             util: {
@@ -19,11 +23,9 @@ class Snapshot {
                 identicalTrees,
                 compareTrees,
                 getDocument,
-                inOrderTraversal
+                inOrderTraversal,
+                extractHostname
             }
-        })
-        this.snapshotService = new options.SnapshotService({
-            snapshotDao: new options.SnapshotDao()
         })
     }
 
@@ -50,7 +52,9 @@ class Snapshot {
             const {
                 url
             } = req.body
-            await this.queueService.add(uuid(), { url })
+            await this.queueService.add(uuid(), {
+                url
+            })
             res.send({
                 status: 200,
                 msg: `successfully added ${url} to snapshot queue`

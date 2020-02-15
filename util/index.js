@@ -43,7 +43,7 @@ const registerModels = _ => {
  * @example
  * getDocument('https://seriesflv.org')
  */
-const getDocument = async (url) => {
+const getDocument = async url => {
     try {
         const html = await axios.get(url).then(res => res.data)
         return cheerio.load(html)
@@ -61,7 +61,7 @@ const getAttributes = attributes => {
     return results
 }
 
-const extractContext = (children) => {
+const extractContext = children => {
     const results = []
     if (children && children.length > 0) {
         for (const child of children) {
@@ -90,6 +90,19 @@ const inOrderTraversal = root => {
     return results
 }
 
+const extractHostname = url => {
+    let hostname = null
+    if (url.indexOf("//") > -1) {
+        hostname = url.split('/')[2]
+    } else {
+        hostname = url.split('/')[0]
+    }
+    hostname = hostname.split(':')[0]
+    hostname = hostname.split('?')[0]
+    return hostname
+}
+
+
 module.exports = {
     initializeRoutes,
     registerModels,
@@ -97,5 +110,6 @@ module.exports = {
     identicalTrees,
     compareTrees,
     getDocument,
-    inOrderTraversal
+    inOrderTraversal,
+    extractHostname
 }
