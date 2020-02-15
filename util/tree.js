@@ -54,6 +54,7 @@ const isEmpty = (obj) => Object.entries(obj).length === 0 && obj.constructor ===
 const hasSimilarAttributes = (first, second) => {
     let result = true
     for (const attr in first) {
+        result = result && second.hasOwnProperty(attr) && second[attr] === first[attr]
     }
     return result
 }
