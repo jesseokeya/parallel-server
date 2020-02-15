@@ -115,12 +115,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Register worker that processes each job in the queue
+     * @returns {Promise<Object>} response for processed job
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const worker = await queueService.registerWorker()
      */
     async registerWorker() {
         try {
@@ -131,12 +129,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Pauses the queue to be resumed later
+     * @returns {Promise<Object>}
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const context = queueService.pause()
      */
     async pause() {
         try {
@@ -147,12 +143,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Resumes a paused queue
+     * @returns {Promise<Object>}
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const context = await queueService.resume()
      */
     async resume() {
         try {
@@ -163,12 +157,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Gets the current active job running in the queue
+     * @returns {Promise<Object>} active job payload
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const job = await queueService.activateJob()
      */
     async activeJob() {
         try {
@@ -179,12 +171,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Empties the queue by flushing the redis server
+     * @returns {Promise<Object>} redis flushall response
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const flush = await queueService.empty()
      */
     async empty() {
         try {
@@ -195,12 +185,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Retrieves the keys of all redis saved bull instances
+     * @returns {Promise<Array<string>>} all saved keys
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const keys = await queueService.keys()
      */
     async keys() {
         try {
@@ -211,12 +199,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Gets the count of completed jobs
+     * @returns {Promise<number>} count of completed jobs
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const completed = await queueService.completedCount()
      */
     completedCount() {
         try {
@@ -227,12 +213,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Gets the count of failed jobs
+     * @returns {Promise<number>} count of failed jobs
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const failed = queueService.failedCount()
      */
     failedCount() {
         try {
@@ -243,12 +227,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Gets the count of delayed jobs
+     * @returns {Promise<number>} count of delayed jobs
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const delayed = queueService.delayedCount()
      */
     delayedCount() {
         try {
@@ -259,12 +241,10 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Gets the count of active jobs
+     * @returns {Promise<number>} count of active jobs
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const active = queueService.activeCount()
      */
     activeCount() {
         try {
@@ -275,12 +255,12 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Retrieves a particular job from redis via id
+     * @param {string} id - job id
+     * @returns {Promise<Snapshot>} redis saved job
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const id = 'bull:Parallel:1'
+     * const context = await job(id)
      */
     async job(id) {
         try {
@@ -291,9 +271,8 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Retrieves a list of completed jobs
+     * @returns {Promise<Array<Snapshot>>} list of completed jobs
      * @example
      * const job = { snapshot, url, current_url, page_title, browser, priority }
      * const process = queueService.process(job)
