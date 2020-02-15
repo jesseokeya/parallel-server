@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ResultSchema = new Schema({
+    domain: {
+        type: String,
+        required: true
+    },
     depth: {
         type: Number,
         required: true
@@ -14,7 +18,8 @@ const ResultSchema = new Schema({
         type: Number,
         required: true
     },
-    association: Schema.Types.ObjectId,
+    /* comparsion points to the unique _id of the other site that was compared */
+    comparison: Schema.Types.ObjectId,
 }, {
     timestamps: true
 })

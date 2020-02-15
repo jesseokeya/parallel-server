@@ -1,42 +1,42 @@
 /**
- * @constructor SnapshotDao
+ * @constructor ResultDao
  * Connects to the database and performs CRUD (create, read, upodate, delete)
- * operations on the snapshot model
+ * operations on the result model
  */
-class SnapshotDao {
+class ResultDao {
     constructor(options = {}) {
         this.options = options;
-        this.snapshot = mongoose.model('Snapshot');
+        this.result = mongoose.model('Result');
     }
 
     /**
-     * Creates a snapshot
+     * Creates a result
      * @param {Object} - ctx
-     * @returns {Promise<Object>} - returns a snapshot object
+     * @returns {Promise<Object>} - returns a result object
      * @throws {Error} if exception occurs at runtime
      */
     async create(ctx) {
         try {
-            const snapshot = new this.snapshot(ctx);
-            return snapshot.save();
+            const result = new this.result(ctx);
+            return result.save();
         } catch (err) {
             throw err;
         }
     }
 
     /**
-     * Deletes a snapshot
-     * @param {snapshotId} - id of snapshot to be deleted
-     * @returns {Promise<Object>} - returns a snapshot object
+     * Deletes a result
+     * @param {resultId} - id of result to be deleted
+     * @returns {Promise<Object>} - returns a result object
      * @throws {Error} if exception occurs at runtime
      */
-    async delete(snapshotId) {
+    async delete(resultId) {
         try {
-            if (isEmpty(snapshotId)) {
-                throw new Error('snapshot id is required to delete a snapshot');
+            if (isEmpty(resultId)) {
+                throw new Error('result id is required to delete a result');
             }
-            return this.snapshot.findByIdAndDelete({
-                _id: snapshotId
+            return this.result.findByIdAndDelete({
+                _id: resultId
             });
         } catch (err) {
             throw err;
@@ -44,20 +44,20 @@ class SnapshotDao {
     }
 
     /**
-     * Get a particular snapshot by snapshot id
+     * Get a particular result by result id
      * @param {string | Object} - ctx
-     * @returns {Promise<Object>} - returns a snapshot object
+     * @returns {Promise<Object>} - returns a result object
      * @throws {Error} if exception occurs at runtime
      */
     async get(ctx) {
         try {
             if (isEmpty(ctx)) {
-                throw new Error('object parameter is required to retrieve a particular snapshot');
+                throw new Error('object parameter is required to retrieve a particular result');
             }
             if (typeof ctx === 'object') {
-                return this.snapshot.findOne(ctx);
+                return this.result.findOne(ctx);
             }
-            return this.snapshot.findOne({
+            return this.result.findOne({
                 _id: ctx
             });
         } catch (err) {
@@ -66,31 +66,31 @@ class SnapshotDao {
     }
 
     /**
-     * Get all snapshots
+     * Get all results
      * @param {string | Object} - ctx
-     * @returns {Promise<Array<Object>>} - returns an array snapshot objects
+     * @returns {Promise<Array<Object>>} - returns an array result objects
      * @throws {Error} if exception occurs at runtime
      */
     async getAll() {
         try {
-            return await this.snapshot.find();
+            return await this.result.find();
         } catch (err) {
             throw err;
         }
     }
 
     /**
-     * Update snapshot by certain criterias
+     * Update result by certain criterias
      * @param {string | Object} - ctx
-     * @returns {Promise<Object>} - returns updated snapshot
+     * @returns {Promise<Object>} - returns updated result
      * @throws {Error} if exception occurs at runtime
      */
     async update(ctx) {
         try {
             if (isEmpty(ctx.id)) {
-                throw new Error('snapshot id is required to update a particular snapshot');
+                throw new Error('result id is required to update a particular result');
             }
-            return await this.snapshot.findByIdAndUpdate({
+            return await this.result.findByIdAndUpdate({
                 _id: ctx.id
             }, ctx, {
                 new: true
@@ -101,4 +101,4 @@ class SnapshotDao {
     }
 }
 
-module.exports = SnapshotDao
+module.exports = ResultDao
