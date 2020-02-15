@@ -53,12 +53,10 @@ const getDocument = async (url) => {
 }
 
 const getAttributes = attributes => {
-    console.log(Object.keys(attributes))
     const results = {}
     if (!attributes) return results
-    for (let i = 0; i < attributes.length; i++) {
-        const attribute = attributes[i]
-        results[attribute.name] = attribute.value
+    for (const key in attributes) {
+        results[key] = attributes[key]
     }
     return results
 }
