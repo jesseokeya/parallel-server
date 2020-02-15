@@ -19,6 +19,7 @@ class QueueService {
         this.options = options
         this.name = options.name
         this.util = options.util
+        this.snapshotService = options.snapshotService
         this.connection = new IORedis();
         this.queue = new Queue(options.name, {
             connection: this.connection
@@ -70,24 +71,34 @@ class QueueService {
         try {
             const start = new Date()
             const hrstart = process.hrtime()
-            const { url } = job.data
+            const {
+                url
+            } = job.data
             if (!url) throw new Error('url is required to be able to run a job')
             const document = await this.util.getDocument(url)
             const title = document('title').text()
-            const body =  document('body')
+            const body = document('body')
             const snapshot = this.util.inOrderTraversal(body)
+            const domain = psl.get(this.util.extractHostname(url))
             const context = {
                 title,
                 snapshot: JSON.stringify(snapshot),
                 url,
-                domain: psl.get(this.util.extractHostname(url))
+                domain
             }
-            console.log(context)
+            await this.snapshotService.comparison({
+                ...context,
+                snapshot
+            })
             const end = new Date() - start,
                 hrend = process.hrtime(hrstart)
             console.info('Execution time: %dms', end)
             console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
-            return 'test'
+            return JSON.stringify({
+                url,
+                domain,
+                duration: `${end}ms`
+            })
         } catch (err) {
             throw err
         }

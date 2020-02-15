@@ -14,18 +14,21 @@ class Snapshot {
         this.options = options
         this.router = options.Router
         this.snapshotService = new options.SnapshotService({
-            snapshotDao: new options.SnapshotDao()
-        })
-        this.queueService = new options.QueueService({
-            name: process.env.NAME,
+            snapshotDao: new options.SnapshotDao(),
             util: {
                 depthOfTree,
                 identicalTrees,
                 compareTrees,
+            }
+        })
+        this.queueService = new options.QueueService({
+            name: process.env.NAME,
+            util: {
                 getDocument,
                 inOrderTraversal,
                 extractHostname
-            }
+            },
+            snapshotService: this.snapshotService
         })
     }
 
