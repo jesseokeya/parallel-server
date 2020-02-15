@@ -67,50 +67,23 @@ class QueueService {
      */
     async process(job) {
         try {
-            const jobs = await this.completedJobs()
-            if (jobs.length > 1) {
-                const start = new Date()
-                const hrstart = process.hrtime()
-                const {
-                    current_url,
-                    snapshot
-                } = job.data
-                const ctx = JSON.parse(jobs[1].data)
-                console.log(current_url, ctx.current_url)
-
-                const depth = this.util.depthOfTree(snapshot)
-                const isIdentical = this.util.identicalTrees(ctx.snapshot, snapshot)
-                const similarityScore = compareTrees(snapshot, ctx.snapshot, isIdentical)
-
-                const end = new Date() - start,
-                    hrend = process.hrtime(hrstart)
-
-                console.info('Execution time: %dms', end)
-                console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
-                return JSON.stringify({
-                    depth,
-                    isIdentical,
-                    similarityScore
-                })
-            } else {
-                const start = new Date()
-                const hrstart = process.hrtime()
-                const {
-                    snapshot
-                } = job.data
-                const depth = this.util.depthOfTree(snapshot)
-                const isIdentical = this.util.identicalTrees(snapshot, snapshot)
-                const similarityScore = compareTrees(snapshot, snapshot, isIdentical)
-                const end = new Date() - start,
-                    hrend = process.hrtime(hrstart)
-                console.info('Execution time: %dms', end)
-                console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
-                return JSON.stringify({
-                    depth,
-                    isIdentical,
-                    similarityScore
-                })
+            const start = new Date()
+            const hrstart = process.hrtime()
+            const { url } = job.data
+            if (!url) throw new Error('url is required to be able to run a job')
+            const document = await this.util.getDocument(url)
+            const title = document('title').text()
+            const body =  document('body')
+            const replicateDocument = this.util.inOrderTraversal(body)
+            console.log(replicateDocument)
+            const result = {
+                title
             }
+            const end = new Date() - start,
+                hrend = process.hrtime(hrstart)
+            console.info('Execution time: %dms', end)
+            console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+            return JSON.stringify(result)
         } catch (err) {
             throw err
         }

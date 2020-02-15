@@ -1,7 +1,11 @@
+const uuid = require('uuid/v1');
+
 const {
     depthOfTree,
     identicalTrees,
-    compareTrees
+    compareTrees,
+    getDocument,
+    inOrderTraversal
 } = require('../util')
 
 class Snapshot {
@@ -13,7 +17,9 @@ class Snapshot {
             util: {
                 depthOfTree,
                 identicalTrees,
-                compareTrees
+                compareTrees,
+                getDocument,
+                inOrderTraversal
             }
         })
         this.snapshotService = new options.SnapshotService({
@@ -26,11 +32,13 @@ class Snapshot {
         this.router.post('/snapshots/', (req, res) => this.createSnapshot(req, res))
     }
 
-    getSnapshots(req, res) {
+    async getSnapshots(req, res) {
         try {
-            console.log(req.body)
+            const limit = req.query.limit
+            const snapshots = await this.snapshotService.snapshots(limit)
             res.send({
-                msg: 'snapshots!'
+                msg: 'successfully retrieved all snapshots',
+                snapshots
             })
         } catch (err) {
             throw err
@@ -40,24 +48,12 @@ class Snapshot {
     async createSnapshot(req, res) {
         try {
             const {
-                url,
-                page_title,
-                snapshot,
-                current_url,
-                browser,
-                priority
+                url
             } = req.body
-            const context = {
-                page_title,
-                snapshot,
-                current_url,
-                browser,
-                priority
-            }
-            this.queueService.add(url, context)
+            await this.queueService.add(uuid(), { url })
             res.send({
                 status: 200,
-                msg: `successfully added ${url} to job queue`
+                msg: `successfully added ${url} to snapshot queue`
             })
         } catch (err) {
             throw err
