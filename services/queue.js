@@ -23,9 +23,9 @@ class QueueService {
             connection: this.connection
         });
         this.queue.waitUntilReady()
-        this.registerScheduler()
-        this.registerWorker()
-        this.registerEvents()
+        this._registerScheduler()
+        this._registerWorker()
+        this._registerEvents()
     }
 
     /**
@@ -39,6 +39,7 @@ class QueueService {
      * @property {string} browser - browser type
      * @property {number} priority - Priority of the new job in the queue defaults to 10
      * @return {Promise<Queue>}
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const context = { snapshot, url, current_url, page_title, browser, priority }
      * const newJob = queueService.add('https://google.com', context)
@@ -59,6 +60,7 @@ class QueueService {
      * @constructor QueueService - manages jobs to be scheduled in the future
      * @param {Snapshot} job - job data to be processed
      * @returns {Promise<Object>} response for resolved bob
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const job = { snapshot, url, current_url, page_title, browser, priority }
      * const process = queueService.process(job)
@@ -116,11 +118,13 @@ class QueueService {
 
     /**
      * Register worker that processes each job in the queue
+     * @private
      * @returns {Promise<Object>} response for processed job
+     * @throws {Error} if exception occurs at runtime
      * @example
-     * const worker = await queueService.registerWorker()
+     * const worker = await queueService._registerWorker()
      */
-    async registerWorker() {
+    async _registerWorker() {
         try {
             return new Worker(this.name, async job => await this.process(job))
         } catch (err) {
@@ -131,6 +135,7 @@ class QueueService {
     /**
      * Pauses the queue to be resumed later
      * @returns {Promise<Object>}
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const context = queueService.pause()
      */
@@ -145,6 +150,7 @@ class QueueService {
     /**
      * Resumes a paused queue
      * @returns {Promise<Object>}
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const context = await queueService.resume()
      */
@@ -159,6 +165,7 @@ class QueueService {
     /**
      * Gets the current active job running in the queue
      * @returns {Promise<Object>} active job payload
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const job = await queueService.activateJob()
      */
@@ -173,6 +180,7 @@ class QueueService {
     /**
      * Empties the queue by flushing the redis server
      * @returns {Promise<Object>} redis flushall response
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const flush = await queueService.empty()
      */
@@ -187,6 +195,7 @@ class QueueService {
     /**
      * Retrieves the keys of all redis saved bull instances
      * @returns {Promise<Array<string>>} all saved keys
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const keys = await queueService.keys()
      */
@@ -201,6 +210,7 @@ class QueueService {
     /**
      * Gets the count of completed jobs
      * @returns {Promise<number>} count of completed jobs
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const completed = await queueService.completedCount()
      */
@@ -215,6 +225,7 @@ class QueueService {
     /**
      * Gets the count of failed jobs
      * @returns {Promise<number>} count of failed jobs
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const failed = queueService.failedCount()
      */
@@ -229,6 +240,7 @@ class QueueService {
     /**
      * Gets the count of delayed jobs
      * @returns {Promise<number>} count of delayed jobs
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const delayed = queueService.delayedCount()
      */
@@ -243,6 +255,7 @@ class QueueService {
     /**
      * Gets the count of active jobs
      * @returns {Promise<number>} count of active jobs
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const active = queueService.activeCount()
      */
@@ -258,6 +271,7 @@ class QueueService {
      * Retrieves a particular job from redis via id
      * @param {string} id - job id
      * @returns {Promise<Snapshot>} redis saved job
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const id = 'bull:Parallel:1'
      * const context = await job(id)
@@ -273,6 +287,7 @@ class QueueService {
     /**
      * Retrieves a list of completed jobs
      * @returns {Promise<Array<Snapshot>>} list of completed jobs
+     * @throws {Error} if exception occurs at runtime
      * @example
      * const job = { snapshot, url, current_url, page_title, browser, priority }
      * const process = queueService.process(job)
@@ -291,30 +306,28 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Gets the count of waiting jobs
+     * @returns {Promise<number>} count of waiting jobs
+     * @throws {Error} if exception occurs at runtime
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const waiting = queueService.waitingCount()
      */
-    getWaitingCount() {
+    waitingCount() {
         try {
-
+            return this.queue.getWaitingCount().then(context => context)
         } catch (err) {
             throw err
         }
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Register queue events
+     * @private
+     * @throws {Error} if exception occurs at runtime
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * const events = await queueService._registerEvents()
      */
-    async registerEvents() {
+    async _registerEvents() {
         try {
             const queueEvents = new QueueEvents(this.name)
             await queueEvents.waitUntilReady();
@@ -332,7 +345,14 @@ class QueueService {
         }
     }
 
-    async registerScheduler() {
+    /**
+     * Register queue scheduler
+     * @private
+     * @throws {Error} if exception occurs at runtime
+     * @example
+     * const scheduler = await queueService._registerScheduler()
+     */
+    async _registerScheduler() {
         try {
             const queueScheduler = new QueueScheduler(this.name);
             await queueScheduler.waitUntilReady();
@@ -343,12 +363,11 @@ class QueueService {
     }
 
     /**
-     * @constructor QueueService - manages jobs to be scheduled in the future
-     * @param {Snapshot} job - job data to be processed
-     * @returns {Promise<Object>} response for resolved bob
+     * Handles queue events for waiting, active, completed, failed and progress
+     * @private
+     * @throws {Error} if exception occurs at runtime
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
-     * const process = queueService.process(job)
+     * queueEvents.on('waiting', ctx => this._handleEvents('waiting', ctx));
      */
     _handleEvents(type, ctx) {
         try {
