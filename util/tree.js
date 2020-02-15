@@ -26,7 +26,7 @@ identicalTrees = (firstNode, secondNode) => {
 
 const generateSimilarityScore = (totalMatches, numberOfNodes, isIdentical) => {
     if (numberOfNodes <= 0) return 0
-    if (totalMatches * 2 > numberOfNodes) return Math.floor(((numberOfNodes) / totalMatches * 2) * 100)
+    if ((totalMatches * 2 > numberOfNodes) && !isIdentical) return Math.floor((totalMatches / numberOfNodes) * 100)
     const result = Math.floor(((totalMatches * 2) / numberOfNodes) * 100)
     if (result > 100 && isIdentical || isIdentical) return 100
     return result
@@ -53,6 +53,7 @@ const isEmpty = (obj) => Object.entries(obj).length === 0 && obj.constructor ===
 
 const hasSimilarAttributes = (first, second) => {
     let result = true
+    if (isEmpty(first) || isEmpty(second)) return false
     for (const attr in first) {
         result = result && second.hasOwnProperty(attr) && second[attr] === first[attr]
     }
