@@ -1,7 +1,10 @@
+require('dotenv').config()
+
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser')
+const mongoose = require("mongoose");
 
 const routes = require('./routes')
 
@@ -25,6 +28,14 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json())
+
+mongoose.connect(process.env.MONGO_URI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).catch(err => {
+    throw err;
+});
 
 initializeRoutes({
     app,

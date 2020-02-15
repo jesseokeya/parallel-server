@@ -9,7 +9,7 @@ class Snapshot {
         this.options = options
         this.router = options.Router
         this.queueService = new options.QueueService({
-            name: 'Parallel',
+            name: process.env.NAME,
             util: {
                 depthOfTree,
                 identicalTrees,
