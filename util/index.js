@@ -22,8 +22,20 @@ const initializeRoutes = ({
     });
 }
 
+/**
+ * Registers application models
+ * @throws {Error} if exception occurs at runtime
+ * @example
+ * registerModels()
+ */
+const registerModels = _ => {
+    require('../models/snapshot')
+    require('../models/result')
+}
+
 module.exports = {
     initializeRoutes,
+    registerModels,
     depthOfTree,
     identicalTrees,
     compareTrees

@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 /**
  * @constructor ResultDao
  * Connects to the database and performs CRUD (create, read, upodate, delete)

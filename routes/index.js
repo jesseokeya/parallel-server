@@ -6,10 +6,13 @@ const NotificationRoute = require('./notification')
 
 /* Required Services */
 const {
-    QueueService
+    QueueService,
+    SnapshotService
 } = require('../services')
 
 /* Required Daos */
+const ResultDao = require('../dao/result')
+const SnapshotDao = require('../dao/snapshot')
 
 const context = {
     Router
@@ -18,9 +21,13 @@ const context = {
 const routes = [
     new SnapshotRoute({
         ...context,
-        QueueService
+        QueueService,
+        SnapshotService,
+        SnapshotDao
     }),
-    new NotificationRoute(context)
+    new NotificationRoute({
+        ...context
+    })
 ]
 
 module.exports = routes

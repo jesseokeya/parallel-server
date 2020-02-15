@@ -16,6 +16,9 @@ class Snapshot {
                 compareTrees
             }
         })
+        this.snapshotService = new options.SnapshotService({
+            snapshotDao: new options.SnapshotDao()
+        })
     }
 
     initialize() {

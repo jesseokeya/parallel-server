@@ -4,16 +4,22 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser')
+
 const mongoose = require("mongoose");
 
-const routes = require('./routes')
-
 const {
-    initializeRoutes
+    initializeRoutes,
+    registerModels
 } = require('./util')
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+mongoose.connect(process.env.MONGO_URI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -29,13 +35,9 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json())
 
-mongoose.connect(process.env.MONGO_URI, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).catch(err => {
-    throw err;
-});
+registerModels()
+
+const routes = require('./routes')
 
 initializeRoutes({
     app,

@@ -1,3 +1,4 @@
 module.exports = {
-    QueueService: require('./queue')
+    QueueService: require('./queue'),
+    SnapshotService: require('./snapshot')
 }

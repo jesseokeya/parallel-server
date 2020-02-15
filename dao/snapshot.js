@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 /**
  * @constructor SnapshotDao
  * Connects to the database and performs CRUD (create, read, upodate, delete)
