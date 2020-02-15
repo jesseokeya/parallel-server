@@ -1,5 +1,16 @@
-const { depthOfTree, identicalTrees, compareTrees } = require('./tree')
+const {
+    depthOfTree,
+    identicalTrees,
+    compareTrees
+} = require('./tree')
 
+/**
+ * Initializes all app routes
+ * @param {Object} context - cotains the express app instance and all routes ready to be initialized
+ * @throws {Error} if exception occurs at runtime
+ * @example
+ * initializeRoutes({ app, routes })
+ */
 const initializeRoutes = ({
     app,
     routes
