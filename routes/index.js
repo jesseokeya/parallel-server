@@ -23,7 +23,8 @@ const routes = [
         ...context,
         QueueService,
         SnapshotService,
-        SnapshotDao
+        SnapshotDao,
+        ResultDao
     }),
     new NotificationRoute({
         ...context

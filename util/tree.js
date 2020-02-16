@@ -41,7 +41,7 @@ const identicalTrees = (firstNode, secondNode) => {
         if (firstNodeLength !== secondNodeLength) return false
         const length = Math.max(firstNodeLength, secondNodeLength)
         for (let i = 0; i < length; i++) {
-            result = result && firstNode.localName === secondNode.localName && identicalTrees(firstNodeChildren[i], secondNodeChildren[i])
+            result = result && firstNode.name === secondNode.name && identicalTrees(firstNodeChildren[i], secondNodeChildren[i])
         }
         return result
     } catch (err) {
@@ -61,9 +61,8 @@ const identicalTrees = (firstNode, secondNode) => {
 const generateSimilarityScore = (totalMatches, numberOfNodes, isIdentical) => {
     try {
         if (numberOfNodes <= 0) return 0
-        if ((totalMatches * 2 > numberOfNodes) && !isIdentical) return Math.floor((totalMatches / numberOfNodes) * 100)
         const result = Math.floor(((totalMatches * 2) / numberOfNodes) * 100)
-        if (result > 100 && isIdentical || isIdentical) return 100
+        if ((result >= 100 && isIdentical) || isIdentical) return 100
         return result
     } catch (err) {
         throw err
@@ -145,7 +144,7 @@ const countSimilarNodes = (comparator, secondNode) => {
     while (arr.length > 0) {
         const node = arr.shift()
         if (node && node.children) arr.push(...node.children)
-        if (comparator.localName === secondNode.localName && hasSimilarAttributes(secondNode.attributes, comparator.attributes)) counter++
+        if (comparator.name === secondNode.name && hasSimilarAttributes(secondNode.attributes, comparator.attributes)) counter++
     }
     return counter
 }

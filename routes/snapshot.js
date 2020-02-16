@@ -15,6 +15,7 @@ class Snapshot {
         this.router = options.Router
         this.snapshotService = new options.SnapshotService({
             snapshotDao: new options.SnapshotDao(),
+            resultDao: new options.ResultDao(),
             util: {
                 depthOfTree,
                 identicalTrees,
