@@ -4,7 +4,8 @@ const cheerio = require('cheerio')
 const {
     depthOfTree,
     identicalTrees,
-    compareTrees
+    compareTrees,
+    inOrderTraversal
 } = require('./tree')
 
 /**
@@ -36,6 +37,19 @@ const registerModels = _ => {
     require('../models/result')
 }
 
+const extractHostname = url => {
+    let hostname = null
+    if (url.indexOf("//") > -1) {
+        hostname = url.split('/')[2]
+    } else {
+        hostname = url.split('/')[0]
+    }
+    hostname = hostname.split(':')[0]
+    hostname = hostname.split('?')[0]
+    return hostname
+}
+
+
 /**
  * Returns the document object model for a given url
  * @param {string} url - url of the website
@@ -52,56 +66,6 @@ const getDocument = async url => {
     }
 }
 
-const getAttributes = attributes => {
-    const results = {}
-    if (!attributes) return results
-    for (const key in attributes) {
-        results[key] = attributes[key]
-    }
-    return results
-}
-
-const extractContext = children => {
-    const results = []
-    if (children && children.length > 0) {
-        for (const child of children) {
-            const invalid = ['script', 'noscript', 'meta', 'style', 'link']
-            const name = child.name
-            if (!invalid.includes(name) && child.type !== 'text' && name) {
-                results.push({
-                    name,
-                    attributes: getAttributes(child.attribs),
-                    children: [...extractContext(child.children)]
-                })
-            }
-        }
-    }
-    return results
-}
-
-const inOrderTraversal = root => {
-    if (!root) throw new Error('root node cannot be null. it is required for traversal')
-    const node = root[0]
-    const results = {
-        name: node.name,
-        attributes: getAttributes(node.attribs),
-        children: [...extractContext(node.children)]
-    }
-    return results
-}
-
-const extractHostname = url => {
-    let hostname = null
-    if (url.indexOf("//") > -1) {
-        hostname = url.split('/')[2]
-    } else {
-        hostname = url.split('/')[0]
-    }
-    hostname = hostname.split(':')[0]
-    hostname = hostname.split('?')[0]
-    return hostname
-}
-
 
 module.exports = {
     initializeRoutes,
@@ -111,5 +75,6 @@ module.exports = {
     compareTrees,
     getDocument,
     inOrderTraversal,
-    extractHostname
+    extractHostname,
+    getDocument
 }

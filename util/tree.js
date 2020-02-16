@@ -174,9 +174,48 @@ compareTrees = (firstNode, secondNode, isIdentical) => {
     }
 }
 
+const getAttributes = attributes => {
+    const results = {}
+    if (!attributes) return results
+    for (const key in attributes) {
+        results[key] = attributes[key]
+    }
+    return results
+}
+
+const extractContext = children => {
+    const results = []
+    if (children && children.length > 0) {
+        for (const child of children) {
+            const invalid = ['script', 'noscript', 'meta', 'style', 'link']
+            const name = child.name
+            if (!invalid.includes(name) && child.type !== 'text' && name) {
+                results.push({
+                    name,
+                    attributes: getAttributes(child.attribs),
+                    children: [...extractContext(child.children)]
+                })
+            }
+        }
+    }
+    return results
+}
+
+const inOrderTraversal = root => {
+    if (!root) throw new Error('root node cannot be null. it is required for traversal')
+    const node = root[0]
+    const results = {
+        name: node.name,
+        attributes: getAttributes(node.attribs),
+        children: [...extractContext(node.children)]
+    }
+    return results
+}
+
 module.exports = {
     depthOfTree,
     identicalTrees,
     compareTrees,
-    isEmpty
+    isEmpty,
+    inOrderTraversal
 }

@@ -22,6 +22,10 @@ class QueueService {
         this.snapshotService = options.snapshotService
         this.connection = new IORedis();
         this.queue = new Queue(options.name, {
+            limiter: {
+                duration: 10000,
+                max: 1
+            },
             connection: this.connection
         });
         this.queue.waitUntilReady()
