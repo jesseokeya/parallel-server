@@ -9,7 +9,8 @@ class SnapshotService {
         this.options = options
         this.snapshotDao = options.snapshotDao
         this.resultDao = options.resultDao
-        this.util = options.util
+        this.notificationService = options.notificationService,
+            this.util = options.util
     }
 
     async snapshots({
@@ -17,7 +18,8 @@ class SnapshotService {
         ignoreSnaphots
     }) {
         try {
-            let snapshots = await this.snapshotDao.getAll(), num = Number(limit)
+            let snapshots = await this.snapshotDao.getAll(),
+                num = Number(limit)
             if (limit && isNumber(num)) {
                 snapshots = snapshots.slice(0, num)
             }
@@ -91,14 +93,13 @@ class SnapshotService {
                         }, fields)
                     }
                     if (similarityScore >= 80) {
-                        // notify the appropriate party of the match
-                        console.log(`${domain} and ${ctx.domain} has a ${similarityScore}% match`)
-                        console.log({
+                        const context = {
                             domain,
-                            comparison: ctx.domain,
+                            otherDomain: ctx.domain,
                             similarityScore,
-                            depth,
-                        })
+                            depth
+                        }
+                        await this.notificationService.slack(context)
                     }
                 }
             })

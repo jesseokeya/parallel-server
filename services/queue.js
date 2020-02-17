@@ -22,10 +22,6 @@ class QueueService {
         this.snapshotService = options.snapshotService
         this.connection = new IORedis();
         this.queue = new Queue(options.name, {
-            limiter: {
-                duration: 10000,
-                max: 1
-            },
             connection: this.connection
         });
         this.queue.waitUntilReady()
@@ -55,7 +51,7 @@ class QueueService {
             const timings = [1000, 20000, 60000]
             return this.queue.add(name, context, {
                 priority: context.priority || 10,
-                // delay: timings[Math.floor(Math.random() * timings.length)]
+                delay: timings[Math.floor(Math.random() * timings.length)]
             });
         } catch (err) {
             throw err

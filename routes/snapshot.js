@@ -14,9 +14,11 @@ class Snapshot {
     constructor(options = {}) {
         this.options = options
         this.router = options.Router
+        this.notificationService = new options.NotificationService()
         this.snapshotService = new options.SnapshotService({
             snapshotDao: new options.SnapshotDao(),
             resultDao: new options.ResultDao(),
+            notificationService: this.notificationService,
             util: {
                 depthOfTree,
                 identicalTrees,
