@@ -95,6 +95,7 @@ class SnapshotService {
                         console.log(`${domain} and ${ctx.domain} has a ${similarityScore}% match`)
                         console.log({
                             domain,
+                            comparison: ctx.domain,
                             similarityScore,
                             depth,
                         })
