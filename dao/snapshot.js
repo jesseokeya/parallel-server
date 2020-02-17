@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { isEmpty } = require('lodash')
 
 /**
  * @constructor SnapshotDao

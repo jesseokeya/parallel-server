@@ -6,7 +6,8 @@ const {
     compareTrees,
     getDocument,
     inOrderTraversal,
-    extractHostname
+    extractHostname,
+    isDaysOld
 } = require('../util')
 
 class Snapshot {
@@ -27,7 +28,8 @@ class Snapshot {
             util: {
                 getDocument,
                 inOrderTraversal,
-                extractHostname
+                extractHostname,
+                isDaysOld
             },
             snapshotService: this.snapshotService
         })

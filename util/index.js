@@ -66,6 +66,12 @@ const getDocument = async url => {
     }
 }
 
+const isDaysOld = (isoString, number) => {
+    const today = new Date()
+    const diffTime = Math.abs(today.getTime()  - new Date(isoString).getTime());
+    const days = Math.ceil(diffTime/ (1000 * 60 * 60 * 24));
+    return number > days
+}
 
 module.exports = {
     initializeRoutes,
@@ -76,5 +82,6 @@ module.exports = {
     getDocument,
     inOrderTraversal,
     extractHostname,
-    getDocument
+    getDocument,
+    isDaysOld
 }

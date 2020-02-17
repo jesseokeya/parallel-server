@@ -1,3 +1,5 @@
+const { isEmpty } = require('lodash')
+
 /**
  * Finds the depth of an n-ary tree with multiple children
  * @param {Object} node - root node of tree
@@ -100,15 +102,6 @@ const countNodes = (firstNode, secondNode) => {
     if (!firstNode && secondNode) return countNode(secondNode)
     return countNode(firstNode) + countNode(secondNode)
 }
-
-/**
- * Checks if an object is undefined, null or empty
- * @param {Object} obj - object to check
- * @returns {Boolean} if object is empty or not
- * @example
- * const totalNumberOfNodes = countNodes(firstNode, secondNode)
- */
-const isEmpty = (obj) => Object.entries(obj).length === 0 && obj.constructor === Object
 
 /**
  * Compares 2 object and check if they have exactly the same key value pairs

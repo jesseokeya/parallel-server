@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { isEmpty } = require('lodash')
 
 /**
  * @constructor ResultDao
@@ -87,14 +88,12 @@ class ResultDao {
      * @returns {Promise<Object>} - returns updated result
      * @throws {Error} if exception occurs at runtime
      */
-    async update(ctx) {
+    async update(query, ctx) {
         try {
             if (isEmpty(ctx.id)) {
                 throw new Error('result id is required to update a particular result');
             }
-            return await this.result.findByIdAndUpdate({
-                _id: ctx.id
-            }, ctx, {
+            return await this.result.findOneAndUpdate(query, ctx, {
                 new: true
             });
         } catch (err) {
