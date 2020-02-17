@@ -1,5 +1,7 @@
 const {
-    isEmpty
+    isEmpty,
+    pick,
+    isNumber
 } = require('lodash')
 
 class SnapshotService {
@@ -8,6 +10,24 @@ class SnapshotService {
         this.snapshotDao = options.snapshotDao
         this.resultDao = options.resultDao
         this.util = options.util
+    }
+
+    async snapshots({
+        limit,
+        ignoreSnaphots
+    }) {
+        try {
+            let snapshots = await this.snapshotDao.getAll(), num = Number(limit)
+            if (limit && isNumber(num)) {
+                snapshots = snapshots.slice(0, num)
+            }
+            if (ignoreSnaphots && ignoreSnaphots === 'true') {
+                return snapshots.map(snapshot => pick(snapshot, ['domain', 'url', 'title', 'createdAt', 'updatedAt']))
+            }
+            return snapshots
+        } catch (err) {
+            throw err
+        }
     }
 
     async comparison(context) {
@@ -39,7 +59,7 @@ class SnapshotService {
                 if (domain !== ctx.domain && (isEmpty(result) || this.util.isDaysOld(updatedAt, 5))) {
                     const ctxSnapshot = JSON.parse(ctx.snapshot)
                     const identical = this.util.identicalTrees(snapshot, ctxSnapshot)
-                    const similarityScore = this.util.compareTrees(snapshot, ctxSnapshot)
+                    const similarityScore = this.util.compareTrees(snapshot, ctxSnapshot, identical)
                     if (isEmpty(result)) {
                         await this.resultDao.create({
                             domain,

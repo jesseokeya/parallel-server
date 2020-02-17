@@ -42,8 +42,8 @@ class Snapshot {
 
     async getSnapshots(req, res) {
         try {
-            const limit = req.query.limit
-            const snapshots = await this.snapshotService.snapshots(limit)
+            const query = req.query
+            const snapshots = await this.snapshotService.snapshots(query)
             res.send({
                 msg: 'successfully retrieved all snapshots',
                 snapshots

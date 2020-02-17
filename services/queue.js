@@ -371,7 +371,6 @@ class QueueService {
                     console.log(`Job ${ctx.jobId} is now active; previous status was ${ctx.prev}`);
                     break
                 case 'completed':
-                    console.log(ctx)
                     console.log(`${ctx.jobId} has completed and returned ${ctx.returnvalue}`);
                     break
                 case 'failed':
