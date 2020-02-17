@@ -30,15 +30,14 @@ class SnapshotService {
             allSnapshots.forEach(async ctx => {
                 const {
                     _id,
-                    updatedAt
+                    updatedAt,
                 } = ctx
                 const result = this.resultDao.get({
                     domain,
                     comparison: _id
                 })
-                if (isEmpty(result) || this.util.isDaysOld(updatedAt, 5)) {
+                if (domain !== ctx.domain && (isEmpty(result) || this.util.isDaysOld(updatedAt, 5))) {
                     const ctxSnapshot = JSON.parse(ctx.snapshot)
-                    const depth = this.util.depthOfTree(snapshot)
                     const identical = this.util.identicalTrees(snapshot, ctxSnapshot)
                     const similarityScore = this.util.compareTrees(snapshot, ctxSnapshot)
                     if (isEmpty(result)) {
@@ -70,6 +69,15 @@ class SnapshotService {
                             domain,
                             comparison: existingSnapshot._id
                         }, fields)
+                    }
+                    if (similarityScore >= 80) {
+                        // notify the appropriate party of the match
+                        console.log(`${domain} and ${ctx.domain} has a ${similarityScore}% match`)
+                        console.log({
+                            domain,
+                            similarityScore,
+                            depth,
+                        })
                     }
                 }
             })
