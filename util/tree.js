@@ -137,7 +137,8 @@ const countSimilarNodes = (comparator, secondNode) => {
     while (arr.length > 0) {
         const node = arr.shift()
         if (node && node.children) arr.push(...node.children)
-        if (comparator.name === secondNode.name && hasSimilarAttributes(secondNode.attributes, comparator.attributes)) counter++
+        const notEmpty = !isEmpty(secondNode.attributes) && !isEmpty(comparator.attributes)
+        if (comparator.name === secondNode.name && hasSimilarAttributes(secondNode.attributes, comparator.attributes) && notEmpty) counter++
     }
     return counter
 }

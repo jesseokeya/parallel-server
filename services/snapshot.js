@@ -58,7 +58,7 @@ class SnapshotService {
                     domain,
                     comparison: _id
                 })
-                if (domain !== ctx.domain && (isEmpty(result) || this.util.isDaysOld(updatedAt, 5))) {
+                if (depth > 5 && domain !== ctx.domain && (isEmpty(result) || this.util.isDaysOld(updatedAt, 5))) {
                     const ctxSnapshot = JSON.parse(ctx.snapshot)
                     const identical = this.util.identicalTrees(snapshot, ctxSnapshot)
                     const countFirstNode = this.util.countNode(snapshot),
