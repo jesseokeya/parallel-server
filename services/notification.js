@@ -11,10 +11,9 @@ class NotificationService {
                 similarityScore,
                 depth
             } = context
-            console.log(`${domain} and ${otherDomain} has a ${similarityScore}% match`)
             console.log({
                 domain,
-                comparison,
+                otherDomain,
                 similarityScore,
                 depth
             })

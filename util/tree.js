@@ -210,5 +210,6 @@ module.exports = {
     identicalTrees,
     compareTrees,
     isEmpty,
-    inOrderTraversal
+    inOrderTraversal,
+    countNode
 }

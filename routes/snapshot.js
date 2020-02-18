@@ -7,7 +7,8 @@ const {
     getDocument,
     inOrderTraversal,
     extractHostname,
-    isDaysOld
+    isDaysOld,
+    countNode
 } = require('../util')
 
 class Snapshot {
@@ -23,6 +24,7 @@ class Snapshot {
                 depthOfTree,
                 identicalTrees,
                 compareTrees,
+                countNode
             }
         })
         this.queueService = new options.QueueService({

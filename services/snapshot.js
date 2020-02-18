@@ -61,7 +61,9 @@ class SnapshotService {
                 if (domain !== ctx.domain && (isEmpty(result) || this.util.isDaysOld(updatedAt, 5))) {
                     const ctxSnapshot = JSON.parse(ctx.snapshot)
                     const identical = this.util.identicalTrees(snapshot, ctxSnapshot)
-                    const similarityScore = this.util.compareTrees(snapshot, ctxSnapshot, identical)
+                    const countFirstNode = this.util.countNode(snapshot),
+                        countSecondNode = this.util.countNode(ctxSnapshot)
+                    const similarityScore = countFirstNode > countSecondNode ? this.util.compareTrees(snapshot, ctxSnapshot, identical) : this.util.compareTrees(ctxSnapshot, snapshot, identical)
                     if (isEmpty(result)) {
                         await this.resultDao.create({
                             domain,

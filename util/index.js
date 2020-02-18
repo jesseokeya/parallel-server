@@ -5,7 +5,8 @@ const {
     depthOfTree,
     identicalTrees,
     compareTrees,
-    inOrderTraversal
+    inOrderTraversal,
+    countNode
 } = require('./tree')
 
 /**
@@ -83,5 +84,6 @@ module.exports = {
     inOrderTraversal,
     extractHostname,
     getDocument,
-    isDaysOld
+    isDaysOld,
+    countNode
 }
