@@ -51,7 +51,7 @@ class QueueService {
             const timings = [1000, 20000, 60000]
             return this.queue.add(name, context, {
                 priority: context.priority || 10,
-                delay: timings[Math.floor(Math.random() * timings.length)]
+                // delay: timings[Math.floor(Math.random() * timings.length)]
             });
         } catch (err) {
             throw err
@@ -72,24 +72,34 @@ class QueueService {
             const start = new Date()
             const hrstart = process.hrtime()
             const {
-                url
+                url,
+                selenium,
+                snapshotId
             } = job.data
             if (!url) throw new Error('url is required to be able to run a job')
-            const document = await this.util.getDocument(url)
-            const title = document('title').text()
-            const body = document('body')
-            const snapshot = this.util.inOrderTraversal(body)
             const domain = psl.get(this.util.extractHostname(url))
-            const context = {
-                title,
-                snapshot: JSON.stringify(snapshot),
-                url,
-                domain
+            if (!selenium) {
+                const document = await this.util.getDocument(url)
+                const title = document('title').text()
+                const body = document('body')
+                const snapshot = this.util.inOrderTraversal(body)
+                const context = {
+                    title,
+                    snapshot: JSON.stringify(snapshot),
+                    url,
+                    domain
+                }
+                await this.snapshotService.comparison({
+                    ...context,
+                    snapshot
+                })
+            } else {
+                const context = await this.snapshotService.get({ _id: snapshotId })
+                await this.snapshotService.comparison({ 
+                    ...context.toJSON(),
+                    snapshot: JSON.parse(context.snapshot)
+                })
             }
-            await this.snapshotService.comparison({
-                ...context,
-                snapshot
-            })
             const end = new Date() - start,
                 hrend = process.hrtime(hrstart)
             console.info('Execution time: %dms', end)

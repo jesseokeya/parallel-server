@@ -1,3 +1,4 @@
+const psl = require('psl');
 const {
     isEmpty,
     pick,
@@ -27,6 +28,30 @@ class SnapshotService {
                 return snapshots.map(snapshot => pick(snapshot, ['domain', 'url', 'title', 'createdAt', 'updatedAt']))
             }
             return snapshots
+        } catch (err) {
+            throw err
+        }
+    }
+
+    get(ctx) {
+        try {
+            return this.snapshotDao.get(ctx)
+        } catch (err) {
+            throw err
+        }
+    }
+
+    create({ snapshot, url, page_title, browser }) {
+        try {
+            const domain = psl.get(this.util.extractHostname(url))
+            const ctx = {
+                domain,
+                url,
+                browser,
+                snapshot,
+                title: page_title
+            }
+            return this.snapshotDao.create(ctx)
         } catch (err) {
             throw err
         }
@@ -106,6 +131,7 @@ class SnapshotService {
                 }
             })
         } catch (err) {
+            console.log(err.stack)
             throw err
         }
     }

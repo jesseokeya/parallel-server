@@ -60,6 +60,7 @@ const extractHostname = url => {
  */
 const getDocument = async url => {
     try {
+        // post reques flask server running selenium
         const html = await axios.get(url).then(res => res.data)
         return cheerio.load(html)
     } catch (err) {

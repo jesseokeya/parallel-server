@@ -24,7 +24,8 @@ class Snapshot {
                 depthOfTree,
                 identicalTrees,
                 compareTrees,
-                countNode
+                countNode,
+                extractHostname,
             }
         })
         this.queueService = new options.QueueService({
@@ -60,10 +61,29 @@ class Snapshot {
     async createSnapshot(req, res) {
         try {
             const {
-                url
+                url,
+                snapshot
             } = req.body
-            await this.queueService.add(uuid(), {
-                url
+            const selenium = req.query.selenium
+            const id = uuid()
+            if (selenium && selenium === 'true') {
+                const newSnapshot = await this.snapshotService.create({
+                    ...req.body,
+                    snapshot: JSON.stringify(snapshot)
+                })
+                await this.queueService.add(id, {
+                    url,
+                    selenium: true,
+                    snapshotId: newSnapshot._id
+                })
+                return res.send({
+                    status: 200,
+                    msg: `successfully added ${url} to snapshot queue`
+                })
+            }
+            await this.queueService.add(id, {
+                url,
+                selenium: false
             })
             res.send({
                 status: 200,
