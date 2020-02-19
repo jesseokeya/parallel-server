@@ -33,7 +33,38 @@ class SnapshotService {
         }
     }
 
-    get(ctx) {
+    async results({ greaterThan }) {
+        try {
+            let results = await this.resultDao.getAll()
+            results = results.map(async result => {
+                const comparison = await this.snapshotDao.get({
+                    _id: result.comparison
+                })
+                const {
+                    title,
+                    url
+                } = await this.snapshotDao.get({
+                    domain: result.domain
+                }) 
+                return {
+                    ...result.toJSON(),
+                    comparison: pick(comparison, ['domain', 'url', 'title', 'createdAt', 'updatedAt', 'browser']),
+                    title,
+                    url
+                }
+            })
+            let context = await Promise.all(results)
+            context = context.filter(val => val.domain !== val.comparison.domain)
+            if (!isEmpty(greaterThan) && Number.isInteger(Number(greaterThan))) {
+                return context.filter(val => val.similarityScore > greaterThan)
+            }
+            return context
+        } catch (err) {
+
+        }
+    }
+
+    async get(ctx) {
         try {
             return this.snapshotDao.get(ctx)
         } catch (err) {
@@ -41,7 +72,12 @@ class SnapshotService {
         }
     }
 
-    create({ snapshot, url, page_title, browser }) {
+    async create({
+        snapshot,
+        url,
+        page_title,
+        browser
+    }) {
         try {
             const domain = psl.get(this.util.extractHostname(url))
             const ctx = {

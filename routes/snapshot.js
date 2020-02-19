@@ -41,6 +41,7 @@ class Snapshot {
     }
 
     initialize() {
+        this.router.get('/results/', (req, res) => this.getResults(req, res))
         this.router.get('/snapshots/', (req, res) => this.getSnapshots(req, res))
         this.router.post('/snapshots/', (req, res) => this.createSnapshot(req, res))
     }
@@ -52,6 +53,18 @@ class Snapshot {
             res.send({
                 msg: 'successfully retrieved all snapshots',
                 snapshots
+            })
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async getResults(req, res) {
+        try {
+            const results = await this.snapshotService.results(req.query)
+            res.send({
+                msg: 'successfully retrieved all results',
+                results
             })
         } catch (err) {
             throw err

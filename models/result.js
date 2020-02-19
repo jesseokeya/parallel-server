@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const ResultSchema = new Schema({
     domain: {
         type: String,
-        required: true
+        required: true,
     },
     depth: {
         type: Number,
