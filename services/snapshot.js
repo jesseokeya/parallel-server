@@ -40,17 +40,9 @@ class SnapshotService {
                 const comparison = await this.snapshotDao.get({
                     _id: result.comparison
                 })
-                const {
-                    title,
-                    url
-                } = await this.snapshotDao.get({
-                    domain: result.domain
-                }) 
                 return {
                     ...result.toJSON(),
-                    comparison: pick(comparison, ['domain', 'url', 'title', 'createdAt', 'updatedAt', 'browser']),
-                    title,
-                    url
+                    comparison: pick(comparison, ['domain', 'url', 'title', 'createdAt', 'updatedAt', 'browser'])
                 }
             })
             let context = await Promise.all(results)
@@ -162,7 +154,7 @@ class SnapshotService {
                             similarityScore,
                             depth
                         }
-                        await this.notificationService.slack(context)
+                        await this.notificationService.slackNotify(context)
                     }
                 }
             })
