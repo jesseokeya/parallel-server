@@ -82,11 +82,6 @@ class QueueService {
                 title,
                 currentUrl
             } = await driver.snapshot(url)
-            const other = psl.get(this.util.extractHostname(currentUrl))
-            const misMatch = domain !== other
-            if (misMatch) await this.add(uuid(), {
-                url
-            })
             await this.snapshotService.comparison({
                 snapshot,
                 title,
