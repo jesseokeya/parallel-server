@@ -1,6 +1,6 @@
 const IORedis = require('ioredis');
-const uuid = require('uuid/v1');
 const psl = require('psl');
+
 const {
     Queue,
     QueueScheduler,
@@ -90,6 +90,7 @@ class QueueService {
                 url,
                 browser: 'chrome'
             })
+            await driver.quit();
             return JSON.stringify({
                 url,
                 currentUrl,
@@ -98,6 +99,7 @@ class QueueService {
                 duration: `${new Date() - start}ms`
             })
         } catch (err) {
+            console.log(err)
             throw err
         }
     }

@@ -10,13 +10,13 @@ const {
 class ChromeDriver {
     constructor(options = {}) {
         this.options = options
-        this.chromeDriverPath = `${appRoot.path}/chromedriver` 
+        this.chromeDriverPath = `${appRoot.path}/chromedriver`
         this.serviceBuilder = new ServiceBuilder(this.chromeDriverPath);
         const chromeOptions = new chrome.Options().addArguments('no-sandbox', 'headless', 'disable-gpu')
         this.driver = new Builder().forBrowser('chrome')
-        .setChromeService(this.serviceBuilder)
-        .setChromeOptions(chromeOptions)
-        .build()
+            .setChromeService(this.serviceBuilder)
+            .setChromeOptions(chromeOptions)
+            .build()
     }
 
     async snapshot(url) {
@@ -24,6 +24,14 @@ class ChromeDriver {
             await this.driver.get(url);
             const snapshot = await this.driver.executeScript(this._script())
             return snapshot
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async quit(url) {
+        try {
+            return this.driver.quit();
         } catch (err) {
             throw err
         }
