@@ -37,7 +37,7 @@ class QueueService {
      * @typedef Snapshot
      * @type {Object}
      * @property {string} snapshot - snapshot of the dom
-     * @property {string} current_url - cuurent page url from selenium
+     * @property {string} current_url -  current page url from selenium
      * @property {string} page_title - extracted page title
      * @property {string} browser - browser type
      * @property {number} priority - Priority of the new job in the queue defaults to 10
