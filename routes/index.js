@@ -12,7 +12,6 @@ const {
 } = require('../services')
 
 /* Required Daos */
-const ResultDao = require('../dao/result')
 const SnapshotDao = require('../dao/snapshot')
 
 const context = {
@@ -25,7 +24,6 @@ const routes = [
         QueueService,
         SnapshotService,
         SnapshotDao,
-        ResultDao,
         NotificationService,
         ChromeDriver
     })

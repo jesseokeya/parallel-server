@@ -69,7 +69,11 @@ class ChromeDriver {
                     }
                     return results
                 }
-                return inOrderTraversal(document.querySelector('body'))`
+                return {
+                    snapshot: inOrderTraversal(document.querySelector('body')),
+                    title: document.title,
+                    currentUrl: window.location.href
+                }`
         } catch (err) {
             throw err
         }

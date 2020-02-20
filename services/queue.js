@@ -64,50 +64,37 @@ class QueueService {
      * @returns {Promise<Object>} response for resolved bob
      * @throws {Error} if exception occurs at runtime
      * @example
-     * const job = { snapshot, url, current_url, page_title, browser, priority }
+     * const job = { url }
      * const process = queueService.process(job)
      */
     async process(job) {
         try {
             const start = new Date()
-            const hrstart = process.hrtime()
             const {
-                url,
-                selenium,
-                snapshotId
+                url
             } = job.data
             if (!url) throw new Error('url is required to be able to run a job')
             const domain = psl.get(this.util.extractHostname(url))
-            if (!selenium) {
-                const document = await this.util.getDocument(url)
-                const title = document('title').text()
-                const body = document('body')
-                const snapshot = this.util.inOrderTraversal(body)
-                const context = {
-                    title,
-                    snapshot: JSON.stringify(snapshot),
-                    url,
-                    domain
-                }
-                await this.snapshotService.comparison({
-                    ...context,
-                    snapshot
-                })
-            } else {
-                const context = await this.snapshotService.get({ _id: snapshotId })
-                await this.snapshotService.comparison({ 
-                    ...context.toJSON(),
-                    snapshot: JSON.parse(context.snapshot)
-                })
-            }
-            const end = new Date() - start,
-                hrend = process.hrtime(hrstart)
-            console.info('Execution time: %dms', end)
-            console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000)
+            const driver = new this.options.chromeDriver()
+            const {
+                snapshot,
+                title,
+                currentUrl
+            } = await driver.snapshot(url)
+            await this.snapshotService.comparison({
+                snapshot,
+                title,
+                currentUrl,
+                domain,
+                url,
+                browser: 'chrome'
+            })
             return JSON.stringify({
                 url,
+                currentUrl,
                 domain,
-                duration: `${end}ms`
+                title,
+                duration: `${new Date() - start}ms`
             })
         } catch (err) {
             throw err

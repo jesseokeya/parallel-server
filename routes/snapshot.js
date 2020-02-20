@@ -18,9 +18,7 @@ class Snapshot {
         this.notificationService = new options.NotificationService()
         this.snapshotService = new options.SnapshotService({
             snapshotDao: new options.SnapshotDao(),
-            resultDao: new options.ResultDao(),
             notificationService: this.notificationService,
-            chromeDriver: options.ChromeDriver,
             util: {
                 depthOfTree,
                 identicalTrees,
@@ -31,6 +29,7 @@ class Snapshot {
         })
         this.queueService = new options.QueueService({
             name: process.env.NAME,
+            chromeDriver: options.ChromeDriver,
             util: {
                 getDocument,
                 inOrderTraversal,
@@ -42,7 +41,6 @@ class Snapshot {
     }
 
     initialize() {
-        this.router.get('/results/', (req, res) => this.getResults(req, res))
         this.router.get('/snapshots/', (req, res) => this.getSnapshots(req, res))
         this.router.post('/snapshots/', (req, res) => this.createSnapshot(req, res))
     }
@@ -60,44 +58,14 @@ class Snapshot {
         }
     }
 
-    async getResults(req, res) {
-        try {
-            const results = await this.snapshotService.results(req.query)
-            res.send({
-                msg: 'successfully retrieved all results',
-                results
-            })
-        } catch (err) {
-            throw err
-        }
-    }
-
     async createSnapshot(req, res) {
         try {
             const {
-                url,
-                snapshot
+                url
             } = req.body
-            const selenium = req.query.selenium
             const id = uuid()
-            if (selenium && selenium === 'true') {
-                const newSnapshot = await this.snapshotService.create({
-                    ...req.body,
-                    snapshot: JSON.stringify(snapshot)
-                })
-                await this.queueService.add(id, {
-                    url,
-                    selenium: true,
-                    snapshotId: newSnapshot._id
-                })
-                return res.send({
-                    status: 200,
-                    msg: `successfully added ${url} to snapshot queue`
-                })
-            }
             await this.queueService.add(id, {
-                url,
-                selenium: false
+                url
             })
             res.send({
                 status: 200,

@@ -33,10 +33,7 @@ const initializeRoutes = ({
  * @example
  * registerModels()
  */
-const registerModels = _ => {
-    require('../models/snapshot')
-    require('../models/result')
-}
+const registerModels = _ => require('../models/snapshot')
 
 const extractHostname = url => {
     let hostname = null

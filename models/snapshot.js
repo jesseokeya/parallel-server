@@ -15,7 +15,11 @@ const SnapshotSchema = new Schema({
         required: true
     },
     title: String,
-    browser: String
+    browser: String,
+    depth: {
+        type: String,
+        required: true
+    }
 }, {
     timestamps: true
 })
