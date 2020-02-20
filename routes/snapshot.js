@@ -1,5 +1,4 @@
 const uuid = require('uuid/v1');
-
 const {
     depthOfTree,
     identicalTrees,
@@ -24,17 +23,15 @@ class Snapshot {
                 identicalTrees,
                 compareTrees,
                 countNode,
-                extractHostname,
+                isDaysOld
             }
         })
         this.queueService = new options.QueueService({
             name: process.env.NAME,
             chromeDriver: options.ChromeDriver,
             util: {
-                getDocument,
                 inOrderTraversal,
-                extractHostname,
-                isDaysOld
+                extractHostname
             },
             snapshotService: this.snapshotService
         })

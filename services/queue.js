@@ -1,4 +1,5 @@
 const IORedis = require('ioredis');
+const uuid = require('uuid/v1');
 const psl = require('psl');
 const {
     Queue,
@@ -48,7 +49,7 @@ class QueueService {
      */
     async add(name, context) {
         try {
-            const timings = [1000, 20000, 60000]
+            // const timings = [1000, 20000, 60000]
             return this.queue.add(name, context, {
                 priority: context.priority || 10,
                 // delay: timings[Math.floor(Math.random() * timings.length)]
@@ -81,6 +82,11 @@ class QueueService {
                 title,
                 currentUrl
             } = await driver.snapshot(url)
+            const other = psl.get(this.util.extractHostname(currentUrl))
+            const misMatch = domain !== other
+            if (misMatch) await this.add(uuid(), {
+                url
+            })
             await this.snapshotService.comparison({
                 snapshot,
                 title,

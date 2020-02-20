@@ -1,4 +1,3 @@
-const psl = require('psl');
 const {
     isEmpty,
     pick,
@@ -45,7 +44,8 @@ class SnapshotService {
         try {
             const {
                 snapshot,
-                domain
+                domain,
+                url
             } = context
             const depth = this.util.depthOfTree(snapshot)
             let existingSnapshot = await this.snapshotDao.get({
@@ -68,11 +68,13 @@ class SnapshotService {
                     const similarityScore = countFirstNode > countSecondNode ? this.util.compareTrees(snapshot, ctxSnapshot, identical) : this.util.compareTrees(ctxSnapshot, snapshot, identical)
                     if (similarityScore >= 80) {
                         const context = {
+                            url,
                             domain,
                             otherDomain: ctx.domain,
                             otherDepth: ctx.depth,
                             similarityScore,
-                            depth
+                            depth,
+
                         }
                         await this.notificationService.slackNotify(context)
                     }

@@ -17,27 +17,31 @@ class NotificationService {
             const {
                 domain,
                 otherDomain,
+                otherDepth,
                 similarityScore,
-                depth
+                depth,
             } = context
             console.log({
                 domain,
                 otherDomain,
+                otherDepth,
                 similarityScore,
                 depth
             })
             const channel = 'parallel'
             // Post a message to the channel, and await the result.
             // Find more arguments and details of the response: https://api.slack.com/methods/chat.postMessage
-            const result = await this.slack.chat.postMessage({
-
+            const equalDepth = depth === otherDepth
+            const text = equalDepth ?
+                `${domain} and ${otherDomain} both have a depth of ${depth}` :
+                `${domain} has a depth of ${depth} and ${otherDomain} has a depth of ${otherDepth}`
+            await this.slack.chat.postMessage({
                 channel,
                 attachments: [{
-                    // footer: '<https://icanhazdadjoke.com/j/08EQZ8EQukb|permalink> - <https://icanhazdadjoke.com|icanhazdadjoke.com>',
-                    text: `Parallel found a ${similarityScore}% match  between http://${domain}/ and http://${otherDomain}/`,
-                    title: 'Similar domains found',
-                    color: 'good',
-                    image_url: 'https://image.flaticon.com/icons/svg/2535/2535501.svg'
+                    footer: `<http://www.google.ca| Click To View Analysis> `,
+                    text,
+                    title: `Parallel found ${similarityScore}% match between ${domain} and ${otherDomain} please verify`,
+                    color: 'warning'
                 }],
                 response_type: 'in_channel'
             });

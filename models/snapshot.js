@@ -17,7 +17,7 @@ const SnapshotSchema = new Schema({
     title: String,
     browser: String,
     depth: {
-        type: String,
+        type: Number,
         required: true
     }
 }, {

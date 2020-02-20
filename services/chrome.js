@@ -1,10 +1,7 @@
 const appRoot = require('app-root-path');
 const chrome = require('selenium-webdriver/chrome');
 const {
-    Builder,
-    By,
-    Key,
-    until
+    Builder
 } = require('selenium-webdriver');
 const {
     ServiceBuilder
