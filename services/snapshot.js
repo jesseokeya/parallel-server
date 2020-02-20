@@ -10,8 +10,9 @@ class SnapshotService {
         this.options = options
         this.snapshotDao = options.snapshotDao
         this.resultDao = options.resultDao
-        this.notificationService = options.notificationService,
-            this.util = options.util
+        this.notificationService = options.notificationService
+        this.util = options.util;
+        this.chromeDriver = options.chromeDriver
     }
 
     async snapshots({
@@ -33,7 +34,9 @@ class SnapshotService {
         }
     }
 
-    async results({ greaterThan }) {
+    async results({
+        greaterThan
+    }) {
         try {
             let results = await this.resultDao.getAll()
             results = results.map(async result => {

@@ -20,6 +20,7 @@ class Snapshot {
             snapshotDao: new options.SnapshotDao(),
             resultDao: new options.ResultDao(),
             notificationService: this.notificationService,
+            chromeDriver: options.ChromeDriver,
             util: {
                 depthOfTree,
                 identicalTrees,

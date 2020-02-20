@@ -7,7 +7,8 @@ const SnapshotRoute = require('./snapshot')
 const {
     QueueService,
     SnapshotService,
-    NotificationService
+    NotificationService,
+    ChromeDriver
 } = require('../services')
 
 /* Required Daos */
@@ -25,7 +26,8 @@ const routes = [
         SnapshotService,
         SnapshotDao,
         ResultDao,
-        NotificationService
+        NotificationService,
+        ChromeDriver
     })
 ]
 

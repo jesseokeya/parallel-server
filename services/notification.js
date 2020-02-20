@@ -30,7 +30,7 @@ class NotificationService {
             // Post a message to the channel, and await the result.
             // Find more arguments and details of the response: https://api.slack.com/methods/chat.postMessage
             const result = await this.slack.chat.postMessage({
-                
+
                 channel,
                 attachments: [{
                     // footer: '<https://icanhazdadjoke.com/j/08EQZ8EQukb|permalink> - <https://icanhazdadjoke.com|icanhazdadjoke.com>',
