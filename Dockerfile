@@ -27,7 +27,7 @@ RUN rm -rvf chromedriver \
 ENV NODE_ENV=production \
     NAME="$NAME" \
     MONGO_URI="$MONGO_URI" \
-    SLACK_TOKEN="$SLACK_TOKEN" \
+    SLACK_TOKEN="$SLACK_TOKEN"
 
 EXPOSE 8080
 
