@@ -4,9 +4,13 @@ FROM node:13.8.0-alpine3.10
 RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \
     echo "http://dl-4.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories
 
-COPY . /parallel
+WORKDIR /server
 
-WORKDIR /parallel
+COPY ./package.json ./
+
+RUN npm install
+
+COPY . .
 
 # install chromedriver
 RUN rm -rvf chromedriver \
@@ -15,8 +19,13 @@ RUN rm -rvf chromedriver \
     && apk add --no-cache redis \
     && apk add chromium chromium-chromedriver
 
+
+
+RUN cd /usr/bin \
+    && ls -al
+
 ENV NODE_ENV=production
 
 EXPOSE 8080
 
-CMD ["redis-server;", "npm run server"]
+CMD redis-server --daemonize yes && npm run server

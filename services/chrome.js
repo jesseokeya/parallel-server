@@ -10,7 +10,8 @@ const {
 class ChromeDriver {
     constructor(options = {}) {
         this.options = options
-        this.chromeDriverPath = `${appRoot.path}/chromedriver`
+        this.chromeDriverPath = process.platform === 'darwin' ? `${appRoot.path}/chromedriver` : '/usr/lib/chromium/chromedriver'
+
         this.serviceBuilder = new ServiceBuilder(this.chromeDriverPath);
         const chromeOptions = new chrome.Options().addArguments('no-sandbox', 'headless', 'disable-gpu')
         this.driver = new Builder().forBrowser('chrome')
