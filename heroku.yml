@@ -1,6 +1,3 @@
 build:
     docker:
-      release:
-         dockerfile: ./
-         target: builder
-      web: npm run server
+        web: Dockerfile
