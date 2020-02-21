@@ -37,6 +37,7 @@ class Snapshot {
     initialize() {
         this.router.get('/snapshots/', (req, res) => this.getSnapshots(req, res))
         this.router.post('/snapshots/', (req, res) => this.createSnapshot(req, res))
+        this.router.post('/webhooks', (req, res) => this.webhooks(req, res))
     }
 
     async getSnapshots(req, res) {
@@ -63,6 +64,17 @@ class Snapshot {
             res.send({
                 status: 200,
                 msg: `successfully added ${url} to snapshot queue`
+            })
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async webhooks(req, res) {
+        try {
+            console.log(req.body)
+            res.send({
+                msg: 'successfully retrieved webook'
             })
         } catch (err) {
             throw err
