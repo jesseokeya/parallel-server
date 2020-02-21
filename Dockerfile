@@ -24,7 +24,10 @@ RUN rm -rvf chromedriver \
 # RUN cd /usr/bin \
 #     && ls -al
 
-ENV NODE_ENV=production
+ENV NODE_ENV=production \
+    NAME="$NAME" \
+    MONGO_URI="$MONGO_URI" \
+    SLACK_TOKEN="$SLACK_TOKEN" \
 
 EXPOSE 8080
 
