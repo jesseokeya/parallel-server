@@ -30,7 +30,6 @@ class QueueService {
         this._registerScheduler()
         this._registerWorker()
         this._registerEvents()
-        this.empty()
     }
 
     /**

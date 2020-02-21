@@ -66,6 +66,16 @@ class SnapshotService {
                     const countFirstNode = this.util.countNode(snapshot),
                         countSecondNode = this.util.countNode(ctxSnapshot)
                     const similarityScore = countFirstNode > countSecondNode ? this.util.compareTrees(snapshot, ctxSnapshot, identical) : this.util.compareTrees(ctxSnapshot, snapshot, identical)
+                    console.log({
+                        url,
+                        domain,
+                        otherDomain: ctx.domain,
+                        otherDepth: ctx.depth,
+                        identical,
+                        similarityScore,
+                        depth,
+
+                    })
                     if (similarityScore >= 80) {
                         const context = {
                             url,

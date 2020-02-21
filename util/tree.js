@@ -182,10 +182,10 @@ const extractContext = children => {
     if (children && children.length > 0) {
         for (const child of children) {
             const invalid = ['script', 'noscript', 'meta', 'style', 'link']
-            const name = child.localName
-            if (!invalid.includes(name) && child.type !== 'text' && name) {
+            const localName = child.localName
+            if (!invalid.includes(localName) && child.type !== 'text' && localName) {
                 results.push({
-                    name,
+                    localName,
                     attributes: getAttributes(child.attribs),
                     children: [...extractContext(child.children)]
                 })
@@ -199,7 +199,7 @@ const inOrderTraversal = root => {
     if (!root) throw new Error('root node cannot be null. it is required for traversal')
     const node = root[0]
     const results = {
-        name: node.localName,
+        localName: node.localName,
         attributes: getAttributes(node.attribs),
         children: [...extractContext(node.children)]
     }
