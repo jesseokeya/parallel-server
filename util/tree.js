@@ -43,7 +43,7 @@ const identicalTrees = (firstNode, secondNode) => {
         if (firstNodeLength !== secondNodeLength) return false
         const length = Math.max(firstNodeLength, secondNodeLength)
         for (let i = 0; i < length; i++) {
-            result = result && firstNode.name === secondNode.name && identicalTrees(firstNodeChildren[i], secondNodeChildren[i])
+            result = result && firstNode.localName === secondNode.localName && identicalTrees(firstNodeChildren[i], secondNodeChildren[i])
         }
         return result
     } catch (err) {
@@ -138,7 +138,7 @@ const countSimilarNodes = (comparator, secondNode) => {
         const node = arr.shift()
         if (node && node.children) arr.push(...node.children)
         const notEmpty = !isEmpty(secondNode.attributes) && !isEmpty(comparator.attributes)
-        if (comparator.name === secondNode.name && hasSimilarAttributes(secondNode.attributes, comparator.attributes) && notEmpty) counter++
+        if (comparator.localName === secondNode.localName && hasSimilarAttributes(secondNode.attributes, comparator.attributes) && notEmpty) counter++
     }
     return counter
 }
@@ -182,7 +182,7 @@ const extractContext = children => {
     if (children && children.length > 0) {
         for (const child of children) {
             const invalid = ['script', 'noscript', 'meta', 'style', 'link']
-            const name = child.name
+            const name = child.localName
             if (!invalid.includes(name) && child.type !== 'text' && name) {
                 results.push({
                     name,
@@ -199,7 +199,7 @@ const inOrderTraversal = root => {
     if (!root) throw new Error('root node cannot be null. it is required for traversal')
     const node = root[0]
     const results = {
-        name: node.name,
+        name: node.localName,
         attributes: getAttributes(node.attribs),
         children: [...extractContext(node.children)]
     }
