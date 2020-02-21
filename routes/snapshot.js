@@ -7,6 +7,9 @@ const {
     isDaysOld,
     countNode
 } = require('../util')
+const {
+    isEmpty
+} = require('lodash')
 
 class Snapshot {
     constructor(options = {}) {
@@ -72,8 +75,23 @@ class Snapshot {
 
     async webhooks(req, res) {
         try {
-            console.log(req.body)
-            res.send(req.body.challenge)
+            const {
+                challenge,
+                command,
+                text
+            } = req.body
+            if (!isEmpty(challenge)) res.send(challenge)
+            if (!isEmpty(command)) {
+                const urls = text.split(' ')
+                urls.forEach(
+                    url => this.queueService.add(uuid(), {
+                        url
+                    })
+                )
+                res.send({
+                    msg: 'successfully received data'
+                })
+            }
         } catch (err) {
             throw err
         }

@@ -2,7 +2,8 @@ const {
     isEmpty
 } = require('lodash')
 const {
-    WebClient
+    WebClient,
+    WebClientEvent
 } = require('@slack/web-api');
 
 class NotificationService {
@@ -10,6 +11,7 @@ class NotificationService {
         this.options = options
         const token = process.env.SLACK_TOKEN;
         this.slack = new WebClient(token);
+        this.slack.on('start', m => console.log(m))
     }
 
     async slackNotify(context) {
