@@ -5,7 +5,8 @@ const {
     Queue,
     QueueScheduler,
     Worker,
-    QueueEvents
+    QueueEvents,
+    Job
 } = require('bullmq');
 
 /**
@@ -29,6 +30,7 @@ class QueueService {
         this._registerScheduler()
         this._registerWorker()
         this._registerEvents()
+        this.empty()
     }
 
     /**
@@ -59,6 +61,16 @@ class QueueService {
         }
     }
 
+    async removeJobs(types) {
+        try {
+            const compeletedJobs = await this.queue.getJobs(types)
+            const removedJobs = compeletedJobs.map(job => job.remove())
+            return Promise.all(removedJobs)
+        } catch (err) {
+            throw err
+        }
+    }
+
     /**
      * @constructor QueueService - manages jobs to be scheduled in the future
      * @param {Snapshot} job - job data to be processed
@@ -74,6 +86,7 @@ class QueueService {
             const {
                 url
             } = job.data
+            await this.removeJobs(['completed', 'failed'])
             if (!url) throw new Error('url is required to be able to run a job')
             const domain = psl.get(this.util.extractHostname(url))
             const driver = new this.options.chromeDriver()

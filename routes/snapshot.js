@@ -3,8 +3,6 @@ const {
     depthOfTree,
     identicalTrees,
     compareTrees,
-    getDocument,
-    inOrderTraversal,
     extractHostname,
     isDaysOld,
     countNode
@@ -30,7 +28,6 @@ class Snapshot {
             name: process.env.NAME,
             chromeDriver: options.ChromeDriver,
             util: {
-                inOrderTraversal,
                 extractHostname
             },
             snapshotService: this.snapshotService
@@ -60,8 +57,7 @@ class Snapshot {
             const {
                 url
             } = req.body
-            const id = uuid()
-            await this.queueService.add(id, {
+            await this.queueService.add(uuid(), {
                 url
             })
             res.send({
