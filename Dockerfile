@@ -21,8 +21,8 @@ RUN rm -rvf chromedriver \
 
 
 
-RUN cd /usr/bin \
-    && ls -al
+# RUN cd /usr/bin \
+#     && ls -al
 
 ENV NODE_ENV=production
 
