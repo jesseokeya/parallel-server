@@ -73,9 +73,7 @@ class Snapshot {
     async webhooks(req, res) {
         try {
             console.log(req.body)
-            res.send({
-                msg: 'successfully retrieved webook'
-            })
+            res.send(req.body.challenge)
         } catch (err) {
             throw err
         }
