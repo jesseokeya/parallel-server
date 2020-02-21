@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/jesseokeya/parallel-server#readme",
   "dependencies": {
+    "@slack/events-api": "^2.3.1",
     "@slack/web-api": "^5.7.0",
     "app-root-path": "^3.0.0",
     "axios": "^0.19.2",
