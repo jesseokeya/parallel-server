@@ -15,7 +15,7 @@ class SnapshotService {
 
     async snapshots({
         limit,
-        ignoreSnaphots
+        ignoreSnapshots
     }) {
         try {
             let snapshots = await this.snapshotDao.getAll(),
@@ -23,7 +23,7 @@ class SnapshotService {
             if (limit && isNumber(num)) {
                 snapshots = snapshots.slice(0, num)
             }
-            if (ignoreSnaphots && ignoreSnaphots === 'true') {
+            if (ignoreSnapshots && ignoreSnapshots === 'true') {
                 return snapshots.map(snapshot => pick(snapshot, ['domain', 'url', 'title', 'createdAt', 'updatedAt']))
             }
             return snapshots
@@ -80,6 +80,41 @@ class SnapshotService {
                     }
                 }
             })
+        } catch (err) {
+            throw err
+        }
+    }
+
+    extractUrls(text) {
+        try {
+            const results = []
+            const values = text.split(' ')
+            for (let value of values) {
+                value = value.replace(/[<>]/gi, '').replace(/[*]/gi, '')
+                const notGitlab = !value.includes('gitlab.irdeto.com')
+                if (value.includes('_') && notGitlab) {
+                    const context = value.replace(/_/gi, '.')
+                    results.push(`http://${context}`)
+                }
+                if (this._validUrl(value) && notGitlab) {
+                    results.push(value)
+                }
+            }
+            return results
+        } catch (err) {
+            throw err
+        }
+    }
+
+    _validUrl(str) {
+        try {
+            const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+            return !!pattern.test(str);
         } catch (err) {
             throw err
         }

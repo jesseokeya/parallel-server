@@ -60,6 +60,18 @@ class QueueService {
         }
     }
 
+    async addBulk(urls, uuid) {
+        try {
+            for (const url of urls) {
+                await this.add(uuid(), {
+                    url
+                })
+            }
+        } catch (err) {
+            throw err
+        }
+    }
+
     async removeJobs(types) {
         try {
             const compeletedJobs = await this.queue.getJobs(types)

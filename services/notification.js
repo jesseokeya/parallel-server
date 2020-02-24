@@ -1,9 +1,6 @@
 const {
     WebClient
 } = require('@slack/web-api');
-// const {
-//     createEventAdapter
-// } = require('@slack/events-api');
 
 class NotificationService {
     constructor(options = {}) {
@@ -28,7 +25,7 @@ class NotificationService {
                 similarityScore,
                 depth
             })
-            const channel = 'parallel'
+            const channel = process.env.SLACK_CHANNEL
             // Post a message to the channel, and await the result.
             // Find more arguments and details of the response: https://api.slack.com/methods/chat.postMessage
             const equalDepth = depth === otherDepth

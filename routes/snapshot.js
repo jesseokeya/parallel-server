@@ -78,20 +78,21 @@ class Snapshot {
             const {
                 challenge,
                 command,
+                event,
                 text
             } = req.body
             if (!isEmpty(challenge)) res.send(challenge)
-            if (!isEmpty(command)) {
-                const urls = text.split(' ')
-                urls.forEach(
-                    url => this.queueService.add(uuid(), {
-                        url
-                    })
-                )
-                res.send({
-                    msg: 'successfully received data'
-                })
+            if (!isEmpty(command) && command === '/parallel') {
+                const urls = this.snapshotService.extractUrls(text)
+                await this.queueService.addBulk(urls, uuid)
             }
+            if (!isEmpty(event) && !isEmpty(event.text)) {
+                const urls = this.snapshotService.extractUrls(event.text)
+                await this.queueService.addBulk(urls, uuid)
+            }
+            res.send({
+                msg: 'successfully received data'
+            })
         } catch (err) {
             throw err
         }
