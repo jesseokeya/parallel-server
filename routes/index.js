@@ -3,6 +3,9 @@ const Router = require('express').Router()
 /* Required Routes */
 const SnapshotRoute = require('./snapshot')
 
+/* Required Daos */
+const SnapshotDao = require('../dao/snapshot')
+
 /* Required Services */
 const {
     QueueService,
@@ -11,16 +14,9 @@ const {
     ChromeDriver
 } = require('../services')
 
-/* Required Daos */
-const SnapshotDao = require('../dao/snapshot')
-
-const context = {
-    Router
-}
-
 const routes = [
     new SnapshotRoute({
-        ...context,
+        Router,
         QueueService,
         SnapshotService,
         SnapshotDao,

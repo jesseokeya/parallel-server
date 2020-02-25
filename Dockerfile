@@ -1,6 +1,6 @@
 FROM node:13.8.0-alpine3.10
 
-# update apk repo
+# Update apk repo
 RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \
     echo "http://dl-4.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories
 
@@ -12,18 +12,14 @@ RUN npm install
 
 COPY . .
 
-# install chromedriver
+# Install chromeDriver, Redis and chromium-chromedriver
 RUN rm -rvf chromedriver \
     && apk update \
     && set -xe \
     && apk add --no-cache redis \
     && apk add chromium chromium-chromedriver
 
-
-
-# RUN cd /usr/bin \
-#     && ls -al
-
+# Set environment varables passed in from cloud provider
 ENV NODE_ENV=production \
     NAME="$NAME" \
     MONGO_URI="$MONGO_URI" \

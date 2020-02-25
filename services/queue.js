@@ -5,8 +5,7 @@ const {
     Queue,
     QueueScheduler,
     Worker,
-    QueueEvents,
-    Job
+    QueueEvents
 } = require('bullmq');
 
 /**

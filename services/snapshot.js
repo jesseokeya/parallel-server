@@ -91,7 +91,7 @@ class SnapshotService {
             const values = text.split(' ')
             for (let value of values) {
                 value = value.replace(/[<>]/gi, '').replace(/[*]/gi, '')
-                const notGitlab = !value.includes('gitlab.irdeto.com')
+                const notGitlab = !value.includes('irdeto.com')
                 if (value.includes('_') && notGitlab) {
                     const context = value.replace(/_/gi, '.')
                     results.push(`http://${context}`)

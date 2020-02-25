@@ -1,4 +1,5 @@
 const uuid = require('uuid/v1');
+const { isEmpty } = require("lodash");
 const {
     depthOfTree,
     identicalTrees,
@@ -7,9 +8,6 @@ const {
     isDaysOld,
     countNode
 } = require('../util')
-const {
-    isEmpty
-} = require('lodash')
 
 class Snapshot {
     constructor(options = {}) {
