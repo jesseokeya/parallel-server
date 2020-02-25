@@ -66,7 +66,7 @@ class SnapshotService {
                     const countFirstNode = this.util.countNode(snapshot),
                         countSecondNode = this.util.countNode(ctxSnapshot)
                     const similarityScore = countFirstNode > countSecondNode ? this.util.compareTrees(snapshot, ctxSnapshot, identical) : this.util.compareTrees(ctxSnapshot, snapshot, identical)
-                    if (similarityScore >= 80) {
+                    if (similarityScore >= 20) {
                         const context = {
                             url,
                             domain,
@@ -101,6 +101,33 @@ class SnapshotService {
                 }
             }
             return results
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async retrieveComparison({
+        domain,
+        otherDomain
+    }) {
+        try {
+            if (isEmpty(domain) || isEmpty(otherDomain)) {
+                return {
+                    msg: 'invalid query domain or otherDomain is empty',
+                    snapshots: {}
+                }
+            }
+            return {
+                msg: 'sucessfully retrieved comparison',
+                snapshots: {
+                    domain: await this.get({
+                        domain
+                    }),
+                    otherDomain: await this.get({
+                        domain: otherDomain
+                    })
+                }
+            }
         } catch (err) {
             throw err
         }

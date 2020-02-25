@@ -41,13 +41,13 @@ registerModels()
 
 const routes = require('./routes')
 
-app.get('/', (_, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-})
-
 initializeRoutes({
     app,
     routes
+})
+
+app.get('/', (_, res) => {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
 })
 
 app.listen(PORT, () => console.log(`Server Running On Port *${PORT}`))

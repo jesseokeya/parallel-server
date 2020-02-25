@@ -38,7 +38,8 @@ class Snapshot {
     initialize() {
         this.router.get('/snapshots/', (req, res) => this.getSnapshots(req, res))
         this.router.post('/snapshots/', (req, res) => this.createSnapshot(req, res))
-        this.router.post('/webhooks', (req, res) => this.webhooks(req, res))
+        this.router.post('/webhooks/', (req, res) => this.webhooks(req, res))
+        this.router.get('/comparison/', (req, res) => this.comparison(req, res))
     }
 
     async getSnapshots(req, res) {
@@ -95,6 +96,17 @@ class Snapshot {
             throw err
         }
     }
+
+    async comparison(req, res) {
+        try {
+            const { domain, otherDomain } = req.query
+            const context = await this.snapshotService.retrieveComparison({ domain, otherDomain })
+            res.send(context)
+        } catch (err) {
+            throw err
+        }
+    }
+
 }
 
 module.exports = Snapshot

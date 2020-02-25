@@ -35,7 +35,7 @@ class NotificationService {
             await this.slack.chat.postMessage({
                 channel,
                 attachments: [{
-                    footer: `<https://irdeto-parallel.herokuapp.com?domain=${domain}&otherDomain=${otherDomain}| Click To View Analysis> `,
+                    footer: `<https://irdeto-parallel.herokuapp.com/?domain=${domain}&otherDomain=${otherDomain}| Click To View Analysis> `,
                     text,
                     title: `Parallel found ${similarityScore}% match between ${domain} and ${otherDomain} please verify`,
                     color: 'warning'

@@ -15,3 +15,46 @@
   background: rgba(255, 255, 255, 0.2);
   margin: 16px;
 }
+
+.app-content {
+  margin: 24px 16px;
+  padding: 24;
+  background: #fff;
+  min-height: 85vh;
+}
+
+.container {
+  margin: 3%;
+}
+
+div.custom-container {
+  background-color: #ebf5fb ;
+  border-radius: 5px;
+  overflow: scroll;
+}
+
+svg.custom .node circle {
+	fill: #F3F3FF;
+	stroke: #2593B8;
+	stroke-width: 1.5px;
+}
+
+svg.custom .node text {
+	font-size: 11px;
+	background-color: #444;
+	fill: #F4F4F4;
+}
+
+svg.custom .node {
+	cursor: pointer;
+}
+
+svg.custom path.link {
+	fill: none;
+	stroke: #2593B8;
+	stroke-width: 1.5px;
+}
+
+.node-highlight {
+  background-color: #2593B8;
+}
