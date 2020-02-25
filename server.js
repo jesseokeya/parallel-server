@@ -4,7 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser')
-
+const path = require('path')
 const mongoose = require("mongoose");
 
 const {
@@ -33,11 +33,17 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(express.static(path.join(__dirname, '/client/build')));
+
 app.use(bodyParser.json())
 
 registerModels()
 
 const routes = require('./routes')
+
+app.get('/', (_, res) => {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+})
 
 initializeRoutes({
     app,

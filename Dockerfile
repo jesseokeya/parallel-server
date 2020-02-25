@@ -4,13 +4,22 @@ FROM node:13.8.0-alpine3.10
 RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \
     echo "http://dl-4.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories
 
-WORKDIR /server
+WORKDIR /parallel
 
-COPY ./package.json ./
-
-RUN npm install
+COPY package.json package.json* ./
+COPY client/package.json client/package.json* ./client/
 
 COPY . .
+
+# Install and build parallel client
+RUN cd client \
+    && npm install --no-optional \
+    && npm cache clean --force \
+    && npm run build \
+    && cd ..
+
+# Install server dependencies
+RUN npm install --no-optional && npm cache clean --force
 
 # Install chromeDriver, Redis and chromium-chromedriver
 RUN rm -rvf chromedriver \
