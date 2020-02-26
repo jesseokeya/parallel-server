@@ -100,13 +100,16 @@ class QueueService {
             if (!url) throw new Error('url is required to be able to run a job')
             const domain = psl.get(this.util.extractHostname(url))
             const driver = new this.options.chromeDriver()
+            const context = await driver.snapshot(url)
+            const screenshot = context.screenshot
             const {
                 snapshot,
                 title,
                 currentUrl
-            } = await driver.snapshot(url)
+            } = context.snapshot
             await this.snapshotService.comparison({
                 snapshot,
+                screenshot,
                 title,
                 currentUrl,
                 domain,

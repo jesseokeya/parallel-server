@@ -3,6 +3,7 @@ const {
     pick,
     isNumber
 } = require('lodash')
+const AWS = require('aws-sdk');
 
 class SnapshotService {
     constructor(options = {}) {
@@ -11,6 +12,10 @@ class SnapshotService {
         this.notificationService = options.notificationService
         this.util = options.util;
         this.chromeDriver = options.chromeDriver
+        this.s3 = new AWS.S3({
+            accessKeyId: process.env.AWS_ACCESS_KEY,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+        })
     }
 
     async snapshots({
@@ -45,17 +50,20 @@ class SnapshotService {
             const {
                 snapshot,
                 domain,
-                url
+                url,
+                screenshot
             } = context
             const depth = this.util.depthOfTree(snapshot)
             let existingSnapshot = await this.snapshotDao.get({
                 domain
             })
             if (isEmpty(existingSnapshot)) {
+                const ctx = await this.uploadImageToAWS(screenshot, domain)
                 existingSnapshot = await this.snapshotDao.create({
                     ...context,
                     snapshot: JSON.stringify(snapshot),
-                    depth
+                    depth,
+                    screenshot: ctx
                 })
             }
             const allSnapshots = await this.snapshotDao.getAll()
@@ -66,7 +74,16 @@ class SnapshotService {
                     const countFirstNode = this.util.countNode(snapshot),
                         countSecondNode = this.util.countNode(ctxSnapshot)
                     const similarityScore = countFirstNode > countSecondNode ? this.util.compareTrees(snapshot, ctxSnapshot, identical) : this.util.compareTrees(ctxSnapshot, snapshot, identical)
-                    if (similarityScore >= 20) {
+                    console.log({
+                        url,
+                        identical,
+                        domain,
+                        otherDomain: ctx.domain,
+                        otherDepth: ctx.depth,
+                        similarityScore,
+                        depth
+                    })
+                    if (similarityScore >= 80) {
                         const context = {
                             url,
                             domain,
@@ -79,6 +96,31 @@ class SnapshotService {
                         await this.notificationService.slackNotify(context)
                     }
                 }
+            })
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async uploadImageToAWS(screenshot, domain) {
+        try {
+            const base64Data = Buffer.from(screenshot.replace(/^data:image\/\w+;base64,/, ""), 'base64')
+            const params = {
+                Bucket: process.env.S3_BUCKET,
+                Key: `${domain.replace(/\./gi, '_')}.jpeg`,
+                Body: base64Data,
+                ACL: 'public-read',
+                ContentEncoding: 'base64',
+                ContentType: 'image/jpeg'
+            }
+            return await new Promise((resolve, reject) => {
+                this.s3.upload(params, (err, data) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(data.Location)
+                    }
+                });
             })
         } catch (err) {
             throw err

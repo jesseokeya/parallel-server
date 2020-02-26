@@ -23,14 +23,19 @@ class ChromeDriver {
     async snapshot(url) {
         try {
             await this.driver.get(url);
+            await this.driver.sleep(5000)
             const snapshot = await this.driver.executeScript(this._script())
-            return snapshot
+            const screenshot = await this.driver.takeScreenshot()
+            return {
+                snapshot,
+                screenshot
+            }
         } catch (err) {
             throw err
         }
     }
 
-    async quit(url) {
+    async quit() {
         try {
             return this.driver.quit();
         } catch (err) {

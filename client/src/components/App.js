@@ -58,7 +58,6 @@ function App() {
   };
 
   const displayAttributes = _ => {
-    console.log(attributes);
     const name = attributes.name
     delete attributes.name
     return (
@@ -114,10 +113,10 @@ function App() {
             <Icon type="security-scan" />
             <span>Analysis</span>
           </Menu.Item>
-          {/* <Menu.Item key="3">
+          <Menu.Item key="3">
             <Icon type="setting" />
             <span>Settings</span>
-          </Menu.Item> */}
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
@@ -150,8 +149,10 @@ function App() {
                     type="warning"
                   />
                 </div>
-                <div className="custom-container">
-                  <Tree data={domainContext} height={800} width={2000} />
+                <div class="contain-tree">
+                  <div className="custom-container">
+                    <Tree data={domainContext} height={800 * (Number(snapshots.domain.depth) / 8)} width={2000} />
+                  </div>
                 </div>
               </Fragment>
             )}
@@ -171,8 +172,10 @@ function App() {
                     type="warning"
                   />
                 </div>
-                <div className="custom-container">
-                  <Tree data={otherDomainContext} height={800} width={2000} />
+                <div class="contain-tree">
+                  <div className="custom-container">
+                    <Tree data={otherDomainContext} height={800 * (Number(snapshots.otherDomain.depth) / 8)} width={2000} />
+                  </div>
                 </div>
               </Fragment>
             )}

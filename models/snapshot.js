@@ -19,6 +19,10 @@ const SnapshotSchema = new Schema({
     depth: {
         type: Number,
         required: true
+    },
+    screenshot: {
+        required: true,
+        type: String
     }
 }, {
     timestamps: true

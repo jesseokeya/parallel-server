@@ -25,11 +25,17 @@
 
 .container {
   margin: 3%;
+  min-height: 100vh !important;
 }
 
 div.custom-container {
   background-color: #ebf5fb ;
   border-radius: 5px;
+  overflow: scroll;
+}
+
+.contain-tree {
+  position: relative;
   overflow: scroll;
 }
 
