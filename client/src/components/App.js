@@ -159,7 +159,7 @@ function App() {
                   <div className="custom-container">
                     <Tree
                       data={domainContext}
-                      height={800 * (Number(snapshots.domain.depth) / 6)}
+                      height={800 * (Number(snapshots.domain.depth) / 3)}
                       width={2000}
                     />
                   </div>
@@ -186,7 +186,7 @@ function App() {
                   <div className="custom-container">
                     <Tree
                       data={otherDomainContext}
-                      height={800 * (Number(snapshots.otherDomain.depth) / 6)}
+                      height={800 * (Number(snapshots.otherDomain.depth) / 3)}
                       width={2000}
                     />
                   </div>
