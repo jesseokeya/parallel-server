@@ -58,17 +58,23 @@ function App() {
   };
 
   const displayAttributes = _ => {
-    const name = attributes.name
-    delete attributes.name
+    const name = attributes.name;
+    delete attributes.name;
     return (
       <Fragment>
         <u>
-          <span><b>TagName</b></span>: <Tag color="geekblue">{name}</Tag>
+          <span>
+            <b>TagName</b>
+          </span>
+          : <Tag color="geekblue">{name}</Tag>
         </u>
         <br />
         {Object.keys(attributes).map(attribute => (
           <div style={{ marginTop: "3%" }}>
-            <span><b>{attribute.trim()}</b></span>: <Tag color="magenta">{attributes[attribute].trim()}</Tag>
+            <span>
+              <b>{attribute.trim()}</b>
+            </span>
+            : <Tag color="magenta">{attributes[attribute].trim()}</Tag>
           </div>
         ))}
       </Fragment>
@@ -151,7 +157,11 @@ function App() {
                 </div>
                 <div class="contain-tree">
                   <div className="custom-container">
-                    <Tree data={domainContext} height={800 * (Number(snapshots.domain.depth) / 8)} width={2000} />
+                    <Tree
+                      data={domainContext}
+                      height={800 * (Number(snapshots.domain.depth) / 8)}
+                      width={2000}
+                    />
                   </div>
                 </div>
               </Fragment>
@@ -174,9 +184,34 @@ function App() {
                 </div>
                 <div class="contain-tree">
                   <div className="custom-container">
-                    <Tree data={otherDomainContext} height={800 * (Number(snapshots.otherDomain.depth) / 8)} width={2000} />
+                    <Tree
+                      data={otherDomainContext}
+                      height={800 * (Number(snapshots.otherDomain.depth) / 8)}
+                      width={2000}
+                    />
                   </div>
                 </div>
+              </Fragment>
+            )}
+          </div>
+          <br />
+          <div style={{ textAlign: 'center' }}>
+            {otherDomainContext && domainContext && (
+              <Fragment>
+                 <div
+                  style={{
+                    margin: "1%",
+                    textAlign: "center",
+                    fontWeight: "bold"
+                  }}
+                >
+                  <Alert
+                    message={`Screenshot between analysis between ${snapshots.domain.domain} and ${snapshots.otherDomain.domain}`}
+                    type="warning"
+                  />
+                </div>
+                <img style={{ margin: '2%' }} src={snapshots.domain.screenshot} width="600" height="600" alt="domain" />
+                <img style={{ margin: '2%' }} src={snapshots.otherDomain.screenshot} width="600" height="600" alt="OtherDomain" />
               </Fragment>
             )}
           </div>
@@ -188,8 +223,8 @@ function App() {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <div style={{ overflow: 'scroll' }}>
-        {Object.keys(attributes).length > 0 && visible && displayAttributes()}
+        <div style={{ overflow: "scroll" }}>
+          {Object.keys(attributes).length > 0 && visible && displayAttributes()}
         </div>
       </Modal>
     </Layout>
