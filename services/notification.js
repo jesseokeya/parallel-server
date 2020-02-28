@@ -18,13 +18,6 @@ class NotificationService {
                 similarityScore,
                 depth,
             } = context
-            console.log({
-                domain,
-                otherDomain,
-                otherDepth,
-                similarityScore,
-                depth
-            })
             const channel = process.env.SLACK_CHANNEL
             // Post a message to the channel, and await the result.
             // Find more arguments and details of the response: https://api.slack.com/methods/chat.postMessage
