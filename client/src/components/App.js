@@ -1,10 +1,15 @@
-import React, { useState, useEffect, useContext, Fragment } from "react";
-import { Layout, Menu, Icon, Alert, Modal, Tag } from "antd";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  Fragment
+} from "react";
+import { Layout, Menu, Icon, Alert } from "antd";
 import { Store } from "../store";
 import { fetchDataAction } from "../actions";
-import Tree from "react-tree-graph";
 import "../styles/app.css";
-import "react-tree-graph/dist/style.css";
+import Tree from "react-d3-tree";
 
 const { Header, Sider, Content } = Layout;
 
@@ -16,26 +21,15 @@ const getQueries = _ => {
 function App() {
   let domainContext = null,
     otherDomainContext = null;
+  const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const { state, dispatch } = useContext(Store);
   const [collapsed, setCollapsed] = useState(false);
   const [snapshots, setSnapshots] = useState({
     domain: null,
     otherDomain: null
   });
-  const [visible, setVisible] = useState(false);
-  const [attributes, setAttributes] = useState({});
 
   const toggle = _ => setCollapsed(!collapsed);
-
-  const showModal = _ => {
-    setVisible(true);
-  };
-  const handleOk = _ => {
-    setVisible(false);
-  };
-  const handleCancel = _ => {
-    setVisible(false);
-  };
 
   const deepCopy = context => {
     const root = JSON.parse(context);
@@ -43,43 +37,13 @@ function App() {
     while (arr.length) {
       const node = arr.shift();
       node["name"] = node.localName;
-      if (node.attributes && Object.keys(node.attributes).length > 0) {
-        node["gProps"] = {
-          onClick: _ => {
-            setVisible(true);
-            setAttributes({ name: node.name, ...node.attributes });
-          }
-        };
-      }
       delete node.localName;
       arr.push(...node.children);
     }
     return root;
   };
 
-  const displayAttributes = _ => {
-    const name = attributes.name;
-    delete attributes.name;
-    return (
-      <Fragment>
-        <u>
-          <span>
-            <b>TagName</b>
-          </span>
-          : <Tag color="geekblue">{name}</Tag>
-        </u>
-        <br />
-        {Object.keys(attributes).map(attribute => (
-          <div style={{ marginTop: "3%" }}>
-            <span>
-              <b>{attribute.trim()}</b>
-            </span>
-            : <Tag color="magenta">{attributes[attribute].trim()}</Tag>
-          </div>
-        ))}
-      </Fragment>
-    );
-  };
+  let treeContainer = useRef();
 
   useEffect(
     _ => {
@@ -87,6 +51,13 @@ function App() {
       const query = getQueries();
       if (!domain && !otherDomain) fetchDataAction(query, dispatch);
       setSnapshots(state.snapshots);
+      if (treeContainer && treeContainer.current) {
+        const dimensions = treeContainer.current.getBoundingClientRect();
+        setTranslate({
+          x: 10,
+          y: dimensions.height / 2
+        });
+      }
     },
     [state, snapshots, dispatch]
   );
@@ -155,13 +126,25 @@ function App() {
                     type="warning"
                   />
                 </div>
-                <div class="contain-tree">
+                <div className="contain-tree">
                   <div className="custom-container">
-                    <Tree
-                      data={domainContext}
-                      height={800 * (Number(snapshots.domain.depth) / 3)}
-                      width={2000}
-                    />
+                    <div
+                      id="treeWrapper"
+                      style={{
+                        width: "100%",
+                        height: "100vh",
+                        textAlign: "center"
+                      }}
+                      ref={treeContainer}
+                    >
+                      <Tree
+                        data={domainContext}
+                        collapsible={true}
+                        transitionDuration={0}
+                        zoom={0.5}
+                        translate={translate}
+                      />
+                    </div>
                   </div>
                 </div>
               </Fragment>
@@ -182,23 +165,35 @@ function App() {
                     type="warning"
                   />
                 </div>
-                <div class="contain-tree">
+                <div className="contain-tree">
                   <div className="custom-container">
-                    <Tree
-                      data={otherDomainContext}
-                      height={800 * (Number(snapshots.otherDomain.depth) / 3)}
-                      width={2000}
-                    />
+                    <div
+                      id="treeWrapper"
+                      style={{
+                        width: "100%",
+                        height: "100vh",
+                        textAlign: "center"
+                      }}
+                      ref={treeContainer}
+                    >
+                      <Tree
+                        data={otherDomainContext}
+                        collapsible={true}
+                        transitionDuration={0}
+                        zoom={0.5}
+                        translate={translate}
+                      />
+                    </div>
                   </div>
                 </div>
               </Fragment>
             )}
           </div>
           <br />
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: "center" }}>
             {otherDomainContext && domainContext && (
               <Fragment>
-                 <div
+                <div
                   style={{
                     margin: "1%",
                     textAlign: "center",
@@ -210,23 +205,25 @@ function App() {
                     type="warning"
                   />
                 </div>
-                <img style={{ margin: '2%' }} src={snapshots.domain.screenshot} width="600" height="600" alt="domain" />
-                <img style={{ margin: '2%' }} src={snapshots.otherDomain.screenshot} width="600" height="600" alt="OtherDomain" />
+                <img
+                  style={{ margin: "2%" }}
+                  src={snapshots.domain.screenshot}
+                  width="600"
+                  height="600"
+                  alt="domain"
+                />
+                <img
+                  style={{ margin: "2%" }}
+                  src={snapshots.otherDomain.screenshot}
+                  width="600"
+                  height="600"
+                  alt="OtherDomain"
+                />
               </Fragment>
             )}
           </div>
         </Content>
       </Layout>
-      <Modal
-        title="Element Attributes"
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <div style={{ overflow: "scroll" }}>
-          {Object.keys(attributes).length > 0 && visible && displayAttributes()}
-        </div>
-      </Modal>
     </Layout>
   );
 }
