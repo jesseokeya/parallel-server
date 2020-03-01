@@ -23,7 +23,7 @@ function App() {
     otherDomainContext = null;
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const { state, dispatch } = useContext(Store);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [snapshots, setSnapshots] = useState({
     domain: null,
     otherDomain: null
