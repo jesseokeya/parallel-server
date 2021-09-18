@@ -18,8 +18,7 @@ This images shows the dom (document object model) nodes and the tree structure o
 And finally a screenshot comparing the 2 sites / domain
 ![slack](assets/screenshot3.png)
 
-This applications was built with:
-
+#### This applications was built with:
 * Express (web server framework)
 * MongoDB (nosql database that stores dom snapshots of previously seen websites)
 * Redis backed Queue utilizing bullmq (to process jobs for website comparisons asynchronously)
